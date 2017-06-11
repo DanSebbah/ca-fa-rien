@@ -1,5 +1,5 @@
 # ca-fa-rien
-Ça-fa-rien is Sefaria powered and its perpose is to generate epub for ebook readers 
+Powered by Sefaria API, Ça-fa-rien perpose is to generate custom epub for ebook readers with the texts and comments you choose 
 
 ## Why this project ?
 Carrying a book in transport is not simple.
