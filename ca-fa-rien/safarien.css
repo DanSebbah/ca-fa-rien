@@ -1,0 +1,211 @@
+@font-face { /*not_in_epub*/
+    font-family: 'TaameiFrank'; /*a name to be used later*/ /*not_in_epub*/
+    src: url('fonts/TaameyFrankCLM-Medium.ttf'); /*URL to font*//*not_in_epub*/
+}/*not_in_epub*/
+
+.dynamicText {
+   max-width: 800px;
+}
+.hebrewContent {
+   direction: rtl;
+   font-family: 'TaameiFrank';/*not_in_epub*/
+   font-style: normal;
+}
+.latinContent {
+   direction: ltr;
+   font-style: normal;
+}
+.rashiContent {
+   font-style: italic;
+}
+.currentBlock {
+    border-radius: 5px 10px 0 5px;
+    padding: 5px;
+    margin: 5px;
+}
+u {
+      text-decoration:none;
+      border-bottom: solid 1px #000000;
+      display: inline;
+      padding-bottom: 2px;
+}
+.tags {
+    display: inline;
+    position: relative;
+}
+.tags:hover:after {
+    background: #333;
+    background: rgba(0,0,0,.8);
+    border-radius: 5px;
+    bottom: -34px;
+    color: #fff;
+    content: attr(glose);
+    left: 20%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    width: 350px;
+}
+.tags:hover:before {
+    border: solid;
+    border-color: #333 transparent;
+    border-width: 0 6px 6px 6px;
+    bottom: -4px;
+    content: "";
+    left: 50%;
+    position: absolute;
+    z-index: 99;
+}
+
+.passoukNumber {
+  direction: rtl;
+  font-size: 0.8em;
+}
+
+.groupHeader {
+  background-color: #AEEEEE; 
+  background: -webkit-linear-gradient(left, #AEEEEE, #c8d3a8); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right, #AEEEEE, #c8d3a8); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right, #AEEEEE, #c8d3a8); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right, #AEEEEE, #c8d3a8); /* Standard syntax */
+  border-radius: 5px 10px 0 5px;
+}
+
+.groupHeader .groupElement {
+  background-color: #8FD8D8; 
+  background: -webkit-linear-gradient(left, #8FD8D8, #ccd1bd); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right, #8FD8D8, #ccd1bd); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right, #8FD8D8, #ccd1bd); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right, #8FD8D8, #ccd1bd); /* Standard syntax */
+
+  border-radius: 5px 10px 0 5px;
+  margin: 1.0em 5px;
+  padding: 0.5em 5px;
+}
+
+blockquote {
+  background: #f9f9f9;
+  font-size: 1.5em;
+  line-height: 1.2;
+  border-left: 10px solid #ccc;
+  border-radius: 5px 10px 0 5px;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+blockquote:before {
+  color: #ccc;
+  font-size: 3.6em;
+  line-height: 0.2em;
+  margin-right: 0.1em;
+  vertical-align: -0.3em;
+  content: "\201C";
+
+}
+blockquote cite:before {
+    content: "\2014 \2009";
+}
+
+blockquote p {
+  display: inline;
+}
+
+.rectForExport {
+  border: 3px solid #ccc;
+  background: #f9f9f9;
+  border-radius: 10px 10px 10px 10px;
+}
+
+
+.rectForRashi {
+  border: 3px solid #ccc;
+  border-radius: 5px 10px 0 5px;
+  padding: 0em 10px;
+}
+
+.rectForReference {
+  border: 3px solid #ccc;
+  border-radius: 5px 10px 0 5px;
+  padding: 0em 10px;
+  border-style: dashed;
+}
+
+.rectForCommentary {
+  border: 3px solid #ccc;
+  border-radius: 5px 10px 0 5px;
+  padding: 0em 10px;
+}
+
+.rectForTargum {
+  border: 3px solid #ccc;
+  border-radius: 5px 10px 0 5px;
+  padding: 0em 10px;
+}
+
+.rectForOtherComments {
+  border: 3px solid #ccc;
+  border-radius: 5px 10px 0 5px;
+  padding: 0em 10px;
+}
+
+
+/* -------------------- Page Styles (not required) */
+div { margin: 20px; }
+
+/* -------------------- Select Box Styles: bavotasan.com Method (with special adaptations by ericrasch.com) */
+/* -------------------- Source: http://bavotasan.com/2011/style-select-box-using-only-css/ */
+.styled-select {
+   height: 29px;
+   overflow: hidden;
+   margin-right: 5px;
+   font-size: 1.3em;
+}
+
+.styled-select select {
+   background: transparent;
+   border: none;
+   font-size: 1.6em;
+   height: 50px;
+   padding: 5px; /* If you add too much padding here, the options won't show in IE */
+   width: 268px;
+}
+
+.styled-select.slate {
+   height: 34px;
+   width: 240px;
+}
+
+.styled-select.slate select {
+   border: 1px solid #ccc;
+   font-size: 16px;
+   height: 34px;
+   width: 268px;
+}
+
+/* -------------------- Rounded Corners */
+.rounded {
+   -webkit-border-radius: 20px;
+   -moz-border-radius: 20px;
+   border-radius: 20px;
+}
+
+.semi-square {
+   -webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+   border-radius: 5px;
+}
+
+/* -------------------- Colors: Background */
+.slate   { background-color: #ddd; }
+.green   { background-color: #c8d3a8; }
+.blue    { background-color: #528B8B; }
+.yellow  { background-color: #eec111; }
+.black   { background-color: #000; }
+
+/* -------------------- Colors: Text */
+.slate select   { color: #000; }
+.green select   { color: #fff; }
+.blue select    { color: #fff; }
+.yellow select  { color: #000; }
+.black select   { color: #fff; }
+

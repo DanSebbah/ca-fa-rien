@@ -1,0 +1,88 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          droopy
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      
+# Short-Description: mini web server to upload files
+# Description:       droopy is a mini Web server whose sole purpose is to let
+#                    others upload files to your computer.
+### END INIT INFO
+
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+	start)
+		echo "Starting droopy "
+		pid=$(ps alx | grep python | grep /usr/bin/droopy | awk '{print $3}')
+		if [ -z $pid ] 
+		then
+			droopy -d /var/www/html/ca-fa-rien/cgi-bin/epubGen/tmp/ --chmod 666 >> /var/log/droopy.log 2>&1 &
+			echo "droopy started"
+		else
+			echo "droopy already started"
+		fi
+
+		;;
+	stop)
+		echo "Stopping droopy"
+		#killall droopy
+		pid=$(ps alx | grep python | grep /usr/bin/droopy | awk '{print $3}')
+		date=$(date "+%F_%H_%M")
+		if [ -z $pid ] 
+		then
+			echo "Droopy not running";
+		else
+			kill $pid;
+			mv /var/log/droopy.log /var/log/droopy_$date.log;
+			echo "Droopy killed";
+		fi
+		;;
+	*)
+		echo "Usage: /etc/init.d/droopy {start|stop}"
+		exit 1
+		;;
+esac
+
+exit 0;
+# Description:       Provide a socket for X11, hald and others to multiplex
+#                    kernel ACPI events.
+### END INIT INFO
+
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+	start)
+		echo "Starting droopy "
+		pid=$(ps alx | grep python | grep /usr/bin/droopy | awk '{print $3}')
+		if [ -z $pid ] 
+		then
+			droopy -d /var/www/html/ca-fa-rien/cgi-bin/epubGen/tmp/ --chmod 666 >> /var/log/droopy.log 2>&1 &
+			echo "droopy started"
+		else
+			echo "droopy already started"
+		fi
+
+		;;
+	stop)
+		echo "Stopping droopy"
+		#killall droopy
+		pid=$(ps alx | grep python | grep /usr/bin/droopy | awk '{print $3}')
+		date=$(date "+%F_%H_%M")
+		if [ -z $pid ] 
+		then
+			echo "Droopy not running";
+		else
+			kill $pid;
+			mv /var/log/droopy.log /var/log/droopy_$date.log;
+			echo "Droopy killed";
+		fi
+		;;
+	*)
+		echo "Usage: /etc/init.d/droopy {start|stop}"
+		exit 1
+		;;
+esac
+
+exit 0;

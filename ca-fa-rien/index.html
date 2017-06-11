@@ -1,0 +1,1563 @@
+<html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="safarien.css">
+    <title>Ça-fa-rien !</title>
+    </head>
+    <body>
+    <h1 style="text-align:center" class="blue rounded">Ça-fa-rien !</h1>
+    <div class="groupHeader">
+        <div style="float:right;display:inline-block">
+            <img style="vertical-align:top" src="./img/safarien_200.png" alt="Ça-fa-rien !"></img>
+            <br/>
+            <a href="https://www.sefaria.org/"> <img style="vertical-align:top" src="https://camo.githubusercontent.com/98d771effa9a1aefbb9f37cb7077c00d45ff8b3d/68747470733a2f2f7777772e736566617269612e6f72672f7374617469632f696d672f706f77657265642d62792d736566617269612d62616467652e706e67" alt="Powered by Sefaria" width=200></img></a>
+
+    </div>
+        <h2>Choose text</h2>
+        <div class="groupElement">
+            <div id="allCategories">
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <div>
+            <label style="float:left" id="bookName"></label>
+            <label style="float:left;margin:10px" id="chapterName"></label>
+            <select style="float:left" id="chapterSelect" class="styled-select blue rounded"></select>
+        <br/>
+            <label style="float:left" id="versionLabel">Version </label>
+            <select style="float:left" id="versionSelect" onchange="onVersionSelectChanged(this.value)" class="styled-select blue rounded"></select>
+            </div>
+        </div>
+        <details>
+        <summary><strong>Select commentators to show</strong></summary>
+        <h3>Commentators</h3>
+        <div id="CommentatorDiv" class="groupElement">
+            <input class="blue rounded" type="button" id="checkAll" onclick="onCheckAllCommentator(this)" value="Check all"></input>
+            <input class="blue rounded" type="button" id="checkNone" onclick="onCheckAllCommentator(this)" value="Uncheck all"></input>
+            <input class="blue rounded" type="button" id="checkInvert" onclick="onCheckAllCommentator(this)" value="invert selection"></input>
+            <input class="blue rounded" type="button" id="collapseAll" onclick="onExpandCollapse('commentator', 'collapse')" value="collapse all"></input>
+            <input class="blue rounded" type="button" id="expandAll" onclick="onExpandCollapse('commentator', 'expand')" value="expand all"></input>
+            <div id="dynamicCommentator"></div>
+        </div>
+        <h3>Targum</h3>
+        <div id="TargumDiv" class="groupElement">
+            <input class="blue rounded" type="button" id="checkAll" onclick="onCheckAllTargum(this)" value="Check all"></input>
+            <input class="blue rounded" type="button" id="checkNone" onclick="onCheckAllTargum(this)" value="Uncheck all"></input>
+            <input class="blue rounded" type="button" id="checkInvert" onclick="onCheckAllTargum(this)" value="invert selection"></input>
+            <input class="blue rounded" type="button" id="collapseAll" onclick="onExpandCollapse('targum', 'collapse')" value="collapse all"></input>
+            <input class="blue rounded" type="button" id="expandAll" onclick="onExpandCollapse('targum', 'expand')" value="expand all"></input>
+            <div id="dynamicTargum"></div>
+        </div>
+        <h3>All others</h3>
+        <div id="OtherCommentsDiv" class="groupElement">
+            <input class="blue rounded" type="button" id="checkAll" onclick="onCheckAllOtherComments(this)" value="Check all"></input>
+            <input class="blue rounded" type="button" id="checkNone" onclick="onCheckAllOtherComments(this)" value="Uncheck all"></input>
+            <input class="blue rounded" type="button" id="checkInvert" onclick="onCheckAllOtherComments(this)" value="invert selection"></input>
+            <input class="blue rounded" type="button" id="collapseAll" onclick="onExpandCollapse('otherComments', 'collapse')" value="collapse all"></input>
+            <input class="blue rounded" type="button" id="expandAll" onclick="onExpandCollapse('otherComments', 'expand')" value="expand all"></input>
+            <div id="dynamicOtherComments"></div>
+        </div>
+        </details>
+        <h3>Printing Options</h3>
+            <input class="blue rounded" type="button" id="collapseAll" onclick="onExpandCollapse('commentator', 'collapse'); onExpandCollapse('targum', 'collapse'); onExpandCollapse('otherComments', 'collapse');" title="collapse all comments in text. This is what you get by default"
+          value="collapse all"></input>
+            <input class="blue rounded" type="button" id="expandAll" onclick="onExpandCollapse('commentator', 'expand'); onExpandCollapse('targum', 'expand'); onExpandCollapse('otherComments', 'expand');" value="expand all" title="expand all comments in text"></input>
+            <input class="blue rounded" type="button" id="safePrintMode" onclick="safePrintMode()" value="Safe print" title="Changes the Names of God so that you can throw your paper with respect, if you want to print on paper... but if you can avoid it, it would be better :)"></input>
+    </div>
+
+<div id="titlePageDiv" style="display:block;margin:10px">
+<h1 style="display:block;margin:10px" id="TitlePage" name="TitlePage" class="chapter"></h1>
+</div>
+<div style="float:block">
+<div style="float:left;margin:0px;vertical-align:top">
+    <img style="vertical-align:top" src="./img/safarien_200.png" alt="Ça-fa-rien !" width="160"></img>
+    <br/>
+    <a  href="https://www.sefaria.org/"><img style="vertical-align:top;margin-left:50px" src="https://camo.githubusercontent.com/98d771effa9a1aefbb9f37cb7077c00d45ff8b3d/68747470733a2f2f7777772e736566617269612e6f72672f7374617469632f696d672f706f77657265642d62792d736566617269612d62616467652e706e67" alt="Powered by Sefaria" width=130></img></a>
+</div>
+<div class="rectForExport" style="float:left;margin:0px;margin-right:10px;vertical-align:top">
+    <div id="exportDiv" style="display:none;margin:0px">
+        <div style="float:left;margin:10px">
+            <img style="vertical-align:top" src="./img/epubLogo.png" width="48" height="48" alt="export current page in epub"></img>
+        </div>
+        <div style="float:left;margin:10px">
+            <a href="#" class="exportPage" id="exportHtml">Download current page </a>
+            <br />
+            <a href="#" class="export" id="exportHtml">Download all Book</a>
+        </div>
+    </div>
+</div>
+</div>
+
+<div style="float:left;margin:0px;vertical-align:top;font-size:0.8em" class="rectForExport">
+    <p id="CopyrightPage" name="CopyrightPage" style="margin:10px;"></p>
+    <p id="licensePage" name="licensePage" style="margin:2px;margin-left:10px"></p>
+    <p id="hebrewLicensePage" name="hebrewLicensePage" style="margin:2px;margin-bottom:10px;margin-left:10px"></p>
+</div>
+
+
+<a href="#" style="visibility:never" id="downloadEpub"></a>
+
+<button style="float:right" onclick="getNextPage(false)">Next page</button>
+<button style="float:right; margin-right:5px;" onclick="getPreviousPage()">Prev page</button>
+
+<div id="loadingDiv">
+    <span style="font-size:2em"><span id="loadingText"></span>
+    <span id="loadingDots">
+    </span>
+    </span>
+</div>
+
+<br/>
+<br/>
+
+<div id="DynamicText" name="DynamicText" class="DynamicText">
+</div>
+
+<br/>
+<button id="bottomNextPage" style="float:right;display:none" onclick="getNextPage(false)">Next page</button>
+<button id="bottomPreviousPage" style="float:right; margin-right:5px;display:none" onclick="getPreviousPage()">Previous page</button>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="./dist/jszip.js"></script>
+<script src="./dist/FileSaver.js"></script>
+
+
+<script type="text/javascript" src="dist/sweetalert-dev.js"></script>
+  <link rel="stylesheet" href="dist/sweetalert.css">
+     <!--script src="jquery-3.1.1.min.js"></script-->
+     <script type="text/javascript">
+
+/* PARAMATERS HANDLING */
+function getParameterByName(name, url) {
+    if (!url) {
+    url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function relaunchTableOfContent() {
+    var sefariaUrl = "http://www.sefaria.org/api/index/";
+    return $.ajax({
+        url:sefariaUrl,
+        type:"GET",
+        crossDomain: true,
+        dataType:"jsonp",
+
+        success: function (data) {
+            allReferences = data;
+            buildAll();
+        }
+    });
+}
+
+function buildAll() {
+    var oups = 30;
+    var toBeContinued = true;
+    var current = 0;
+    while(current < oups && toBeContinued) {
+        toBeContinued = buildNext();
+        current = current + 1;
+    }
+    onLearn();
+}
+
+function safePrintMode() {
+    var name_Chal_om = ['י', 'ה', 'ו', 'ה', ' ', 'ש','ל','ו','ם']; //only the one that Guidon formulates in Chofetim 6:24 refers to God, others mean "peace"
+    var name_Kel_Tetra = ['א', 'ל', ' ','י', 'ה', 'ו', 'ה'];
+    var name_Tetra = ['י', 'ה', 'ו', 'ה'];
+    var name_Elokim = ['א', 'ל', 'ה', 'י','ם'];
+    var name_Kel_elokei = ['א', 'ל', ' ', 'א', 'ל', 'ו', 'ה', 'י'];
+    var name_Elokai = ['א', 'ל', 'ו', 'ה', 'י'];
+    var name_Eloka = ['א', 'ל', 'ו', 'ה'];
+    var name_Kel_chakai = ['א', 'ל','–','ש', 'ד', 'י'];
+    var name_Kel_chakai2 = ['א', 'ל',' ','ש', 'ד', 'י'];
+    var name_Kel_chakai3 = ['א', 'ל','־','ש', 'ד', 'י'];
+    var name_Chakai = ['ש', 'ד', 'י'];
+    var name_Adochem = ['א', 'ד', 'נ', 'י'];
+    var name_Ehye_acher_ehye = ['א', 'ה', 'י', 'ה',' ','א','ש','ר','א', ' ', 'ה', 'י', 'ה']; //When God reveals His Name to Moses in Parachat Devarim, before the delivery
+    var name_Tsevakot = ['צ', 'ב', 'א', 'ו','ת'];
+    var name_Kel_olam = ['א', 'ל', ' ', 'ע', 'ו', 'ל', 'ם'];
+    var name_Kel_olam2 = ['א', 'ל', ' ', 'ע', 'ל', 'ם'];
+    var name_Kel_Elyion = ['א', 'ל', ' ', 'ע', 'ל', 'י','ו', 'ן'];
+    var name_Kel_hai = ['א', 'ל', ' ', 'ח', 'י'];
+    var name_Kel_roi = ['א', 'ל', ' ', 'ר', 'א','י'];
+    var name_Kel_kana = ['א', 'ל', ' ', 'ק', 'נ','א'];
+    var name_Kel_Hagadol = ['א', 'ל', ' ', 'ה', 'ג','ד','ל'];
+    var name_Kel_Gadol = ['א', 'ל', ' ', 'ג','ד','ו','ל'];
+    var name_Kel_Guibor = ['א', 'ל', ' ', 'ג','י','ב','ר'];
+    var name_Mi_Kel = ['מ','י',' ','א', 'ל'];
+    var name_Mi_Kel2 = ['מ','י','–','א', 'ל'];
+    var name_Mi_Kel3 = ['מ','י','־','א', 'ל'];
+ 
+    var letterAlephChar = 'א';
+    var letterDaletChar = 'ד';
+    var letterheChar = 'ה';
+    var letterdaletChar = 'ד';
+    var letterLamedChar = 'ל';
+    var letterKoufChar = 'ק';
+    var letterNounChar = 'נ';
+    var letterTiretChar = '–';
+
+    replaceName(name_Chal_om, letterLamedChar, letterLamedChar+letterTiretChar);
+    replaceName(name_Kel_Tetra, letterAlephChar, letterKoufChar);
+    replaceName(name_Tetra, letterheChar, letterKoufChar);
+    replaceName(name_Elokim, letterheChar, letterKoufChar);
+    replaceName(name_Kel_elokei, letterAlephChar, letterKoufChar);
+    replaceName(name_Elokai, letterheChar, letterKoufChar);
+    replaceName(name_Eloka, letterheChar, letterKoufChar);
+    replaceName(name_Kel_chakai, letterAlephChar, letterKoufChar);
+    replaceName(name_Kel_chakai2, letterAlephChar, letterKoufChar);
+    replaceName(name_Kel_chakai3, letterAlephChar, letterKoufChar);
+    replaceName(name_Chakai, letterDaletChar, letterKoufChar);
+    replaceName(name_Adochem, letterNounChar, letterNounChar+letterTiretChar);
+    replaceName(name_Ehye_acher_ehye, letterheChar, letterKoufChar);
+    replaceName(name_Tsevakot, letterAlephChar, letterKoufChar);
+    replaceName(name_Kel_olam, letterAlephChar, letterKoufChar);
+    replaceName(name_Kel_olam2, letterAlephChar, letterKoufChar);
+    replaceName(name_Kel_Elyion, letterAlephChar, letterKoufChar);
+    replaceName(name_Kel_hai, letterAlephChar, letterKoufChar);
+    replaceName(name_Kel_roi, letterAlephChar, letterKoufChar);
+    replaceName(name_Kel_kana, letterAlephChar, letterKoufChar);
+    replaceName(name_Kel_Hagadol, letterAlephChar, letterKoufChar);
+    replaceName(name_Kel_Gadol, letterAlephChar, letterKoufChar);
+    replaceName(name_Kel_guibor, letterAlephChar, letterKoufChar);
+    replaceName(name_Mi_Kel, letterAlephChar, letterKoufChar);
+    replaceName(name_Mi_Kel2, letterAlephChar, letterKoufChar);
+    replaceName(name_Mi_Kel3, letterAlephChar, letterKoufChar);
+
+}
+
+function replaceName(tabNameToChange, letterToReplace, letterThatReplace) {
+    var content = document.getElementById("DynamicText").innerHTML;
+    var letterThatReplaceRegexp = new RegExp(letterToReplace,'g');
+    var anonymiseName = '';
+    for(iii=0; iii < tabNameToChange.length; iii++) {
+        //console.debug(tabNameToChange[iii]);
+        var hexa = tabNameToChange[iii] + "([" + ignoreChars + "])*";
+        anonymiseName += hexa;
+    }
+
+    //console.debug(anonymiseName);
+    var matchingContent = content.match(new RegExp(anonymiseName,'g'));
+    if(matchingContent != null) {
+        for(iiii=0; iiii < matchingContent.length;iiii++) {
+            var anonyme = matchingContent[iiii].replace(letterThatReplaceRegexp, letterThatReplace);
+            content = content.replace(new RegExp(matchingContent[iiii],'g'), anonyme);
+        }
+        document.getElementById("DynamicText").innerHTML = content;
+    }
+}
+
+function onExpandCollapse(type, value) {
+    //console.debug(button);
+    var isOpen = null
+    if(value == "collapse") isOpen = false;
+    if(value == "expand") isOpen = true;
+    if(isOpen != null) {
+        var allComments = document.getElementsByClassName(type);
+        for(var i=0;i<allComments.length;i++) {
+            allComments[i].open = isOpen;
+        }
+    }
+}
+
+function getHashFromLocationHash(type) {
+    var currentHash = window.location.hash;
+
+    var typeWithDelimiter = "&" + type + "=";
+    var regex = new RegExp(".*&"+type+"=([^#]*)##");
+
+    var patternMatched = regex.exec(currentHash);
+
+    if(patternMatched != null && patternMatched.length == 2)
+    return patternMatched[1];
+    return "";
+}
+
+function updateWindowLocationHash(type, value) {
+    var currentHash = window.location.hash;
+
+    var delimiter = "##";
+    var typeWithDelimiter = "&" + type + "=";
+    var valueWithDelimiter = value + delimiter;
+    var regex = new RegExp("(&"+type+"=)([^#]*##)");
+
+    var patternMatched = regex.exec(currentHash);
+
+    if(patternMatched != null && patternMatched.length == 3) {
+    if(patternMatched[2] != null && patternMatched[2].length > 0 && patternMatched[2] != delimiter)
+        currentHash = currentHash.replace(patternMatched[2], valueWithDelimiter);
+    else
+        currentHash = currentHash.replace(typeWithDelimiter + delimiter, typeWithDelimiter + valueWithDelimiter);
+    } else
+    currentHash += typeWithDelimiter + valueWithDelimiter;
+
+    window.location.hash = currentHash;
+}
+
+function onVersionSelectChanged(versionSelect) {
+    p_textVersion = versionSelect;
+    //window.location.hash = p_textVersion;
+    updateWindowLocationHash("textVersion", versionSelect);
+    console.debug(window.location.hash);
+    console.debug(versionSelect);
+    var copyrightPage = document.getElementById('CopyrightPage');
+    var licensePage = document.getElementById('licensePage');
+    var hebrewLicensePage = document.getElementById('hebrewLicensePage');
+    var license = null;
+    var version = null;
+    currentData.versions.forEach(function(element) {
+        var nameForUrl = element.versionTitle.replace(new RegExp(" ","g"),"_");
+        if(nameForUrl == p_textVersion) {
+            license = element.license;
+            version = element.versionTitle;
+        }
+    });
+    copyrightPage.innerHTML = "version : " + version;
+    licensePage.innerHTML = "license : " + license;
+    isLoading = true;
+    loadingStyle(true);
+
+    relaunch();
+}
+
+function onCheckAllCommentator(button) {
+    //console.debug(button);
+    var allCheckBoxes = document.getElementsByClassName("commentatorCheckBox");
+    for(var i=0;i<allCheckBoxes.length;i++) {
+        var toChange = false;
+        if(button.id == "checkInvert") {
+            toChange = true;
+        } else {
+            if(button.id == "checkAll") {
+                toChange = allCheckBoxes[i].checked ? false : true;
+            } else {
+                toChange = allCheckBoxes[i].checked ? true : false;
+            }
+        }
+        if(toChange) {
+            allCheckBoxes[i].click();
+        }
+    }
+}
+
+function onCheckAllTargum(button) {
+    //console.debug(button);
+    var allCheckBoxes = document.getElementsByClassName("targumCheckBox");
+    for(var i=0;i<allCheckBoxes.length;i++) {
+        var toChange = false;
+        if(button.id == "checkInvert") {
+            toChange = true;
+        } else {
+            if(button.id == "checkAll") {
+                toChange = allCheckBoxes[i].checked ? false : true;
+            } else {
+                toChange = allCheckBoxes[i].checked ? true : false;
+            }
+        }
+        if(toChange) {
+            allCheckBoxes[i].click();
+        }
+    }
+}
+
+function onCheckAllOtherComments(button) {
+    //console.debug(button);
+    var allCheckBoxes = document.getElementsByClassName("otherCommentsCheckBox");
+    for(var i=0;i<allCheckBoxes.length;i++) {
+        var toChange = false;
+        if(button.id == "checkInvert") {
+            toChange = true;
+        } else {
+            if(button.id == "checkAll") {
+                toChange = allCheckBoxes[i].checked ? false : true;
+            } else {
+                toChange = allCheckBoxes[i].checked ? true : false;
+            }
+        }
+        if(toChange) {
+            allCheckBoxes[i].click();
+        }
+    }
+}
+
+var allReferences = [];
+var lastLevel = 0;
+var myDiv = document.getElementById("allCategories");
+var currentChapter = 1;
+var currentLength = 1;
+var currentBookName = "";
+var currentIsGuemara = false;
+var currentIsInteger = false;
+
+function buildNext() {
+    //console.debug("on category change : " + lastLevel );
+    
+    var search = allReferences;
+    var lastValue = "";
+    var lastValueIndex = 0;
+
+    for(i = 0; i < lastLevel; i++) {
+        var categorySelection = document.getElementById('categorySelection'+i);
+        lastValue = categorySelection.value;
+        lastValueIndex = categorySelection.selectedIndex;
+        //console.debug("value : " + lastValue + " " + lastValueIndex);
+        //console.debug("search : " + search[lastValueIndex] );
+        search = search[lastValueIndex].contents;
+    }
+
+    var categorySelection = document.createElement('select');
+    categorySelection.id = "categorySelection" + (lastLevel);
+    categorySelection.style.float = "left";
+    categorySelection.className = "styled-select blue rounded";
+    categorySelection.onchange = function() { 
+        onChangeCategory(this.id,this.value); 
+    };
+
+    var subCategorySelectionString = '';
+    var selectedIndex = 0;
+    if(search != undefined && search != null && search.length > 0) {
+    for(s = 0; s < search.length ; s++) {
+        if(search[s].category === undefined) {
+            var titleValue = search[s].title.replace(new RegExp(" ",'g'), "_");
+            subCategorySelectionString += '<option value=' + titleValue + '>' + search[s].title + "    " + search[s].heTitle + '</option>';
+            if(loadingCategories[lastLevel] == titleValue) {
+                selectedIndex = s;
+            }
+        } else {
+            var categoryValue = search[s].category.replace(" ", "&#32;");
+            subCategorySelectionString += '<option value=' + categoryValue + '>' + search[s].category + "    " + search[s].heCategory + '</option>';
+            if(loadingCategories[lastLevel] && loadingCategories[lastLevel].replace(" ", "&#32;") == categoryValue) {
+                selectedIndex = s;
+            }
+        }
+    }
+    categorySelection.innerHTML = subCategorySelectionString;
+    categorySelection.selectedIndex = selectedIndex;
+    //console.debug("AAAAH AA " + subCategorySelectionString);
+    lastLevel = lastLevel + 1;
+    myDiv.appendChild(categorySelection);
+    return true;
+    }
+    return false;
+}
+
+function onChangeCategory(name, value) {
+    //console.debug("on category : " + name + "  change : " + value);
+    var index = name.replace("categorySelection","");
+    for(i=lastLevel-1 ; i > index; i--) {
+        var name = "categorySelection" + i;
+        var element = document.getElementById(name);
+        //console.debug("element : " + element );
+        myDiv.removeChild(element);
+        lastLevel -= 1;
+    }
+    updateWindowLocationHash("textVersion","");//reinit
+    buildAll();
+}
+firstSectionName = '';
+function onLearn() {
+    var bookName = document.getElementById('bookName');
+    var name = "categorySelection" + (lastLevel-1);
+    var element = document.getElementById(name);
+    currentBookName = element.value;
+    bookName.innerHTML = "<b>"+currentBookName +"</b>";
+    //console.debug("Learn title : " + currentBookName );
+
+    var search = allReferences;
+    firstSectionText = "";
+    var firstSectionText = "";
+    var firstSection = "";
+    var lastValueIndex = 0;
+
+    for(i = 0; i < lastLevel-1; i++) {
+        var categorySelection = document.getElementById('categorySelection'+i);
+        lastValueIndex = categorySelection.selectedIndex;
+        search = search[lastValueIndex].contents;
+        //console.debug("search : " + search);
+    }
+    //console.debug(search);
+    //console.debug("jee" + p_chapter);
+    firstSectionName = search[element.selectedIndex].firstSection.replace(new RegExp(" ([0-9][ab]*)"), ".$1").replace(new RegExp(" ","g"),"_");
+    
+    if(initChapter && p_chapter !== undefined) {
+          if((/^\d+$/.test(p_chapter) && /^.*\d+$/.test(firstSectionName))
+        ||    (/^\d+[ab]$/.test(p_chapter) && /^.*\d+[ab]$/.test(firstSectionName))
+        ) {
+        firstSectionName.replace(new RegExp("\.[0-9][ab]*"),p_chapter);
+        }
+    }
+    firstSectionText = firstSectionName;
+    firstSection = firstSectionText.replace(currentBookName +"_" , "");
+    firstSection = firstSectionText.replace(currentBookName +"." , "");
+    //console.debug(firstSectionName + " alors ? " + firstSectionText + " et " + currentBookName + " " + firstSection);
+    if(/^\d+$/.test(firstSection)) {
+        currentIsInteger = true;
+    } else if(/^\d+[ab]$/.test(firstSection)) {
+        currentIsGuemara = true;
+    }
+    //console.debug("Learn first section : " + firstSectionText + " -> " + firstSection + " ( " + currentIsInteger + ", " + currentIsGuemara + "  )" );
+    if(currentIsInteger || currentIsGuemara || true) {
+        //var url = "https://www.sefaria.org/api/texts/" + currentBookName  + "." + "100";
+        var url = "https://www.sefaria.org/api/index/" + currentBookName;
+        //var url = "https://www.sefaria.org/api/texts/"+ firstSectionText;
+        $.ajax({
+            url:url,
+            type:"GET",
+            crossDomain: true,
+            dataType:"jsonp",
+
+            success: function (data) {
+                var regex = new RegExp(currentBookName  + " ends at ([^\ ]*) ([^\.ab]*)(.)");
+                //console.debug("regexp : " + regex);
+
+                var match = regex.exec(data.error);
+                var length = 0;
+                var chapterName = document.getElementById('chapterName');
+                var chapter = document.getElementById('chapterSelect');
+                var lastAmoud = '';
+                if(match == undefined || match == null) {
+                    chapterName.innerHTML = data.sectionNames ? data.sectionNames[0] : null;
+                    length = data.length;
+                    if(currentIsGuemara) {
+                        if(length%2 == 0) {
+                            length = (length + 2) / 2;
+                            lastAmoud = 'b';
+                        } else {
+                            length = (length - 1 + 4) / 2;
+                            lastAmoud = 'a';
+                        }
+                    }
+                    if(length == undefined) {
+                        length = 1;
+                        chapter = "_";
+                    }
+                    if(length == null) {
+                        length = 20; //TODO
+                    }
+                } else {
+                    //console.debug("test " + match[0] + " et " + match[1] + " et " + match[2]);
+                    //console.debug(data.error);
+                    length = match[2];
+                    chapterName.innerHTML = match[1];
+                    lastAmoud = match[3];
+                }
+                currentLength = length;
+                allChapters = '';
+                var selectedIndex = 0;
+                var selectedValue = '1';
+                for(i=1; i <= length; i++) {
+                    if(currentIsInteger) {
+                        allChapters += '<option value=' + i + '>' + i + '</option>';
+                        if(initChapter && i == p_chapter) {
+                            selectedIndex = i-1;
+                            selectedValue = i;
+                            //console.debug("ahahahahahahah " + selectedIndex);
+                        }
+                    } else if(currentIsGuemara){
+                        if(i < 2) continue;
+                        var daf = i + "a";
+                        allChapters += '<option value=' + daf + '>' + i+"a" + '</option>';
+                        if(initChapter && daf == p_chapter) {
+                            selectedIndex = (i-1)*2-2;
+                            selectedValue = daf;
+                        }
+                        if(i <= length || lastAmoud == 'b' ) {
+                            daf = i + "b";
+                            if(initChapter && daf == p_chapter) {
+                                selectedIndex = (i-1)*2-1;
+                                selectedValue = daf;
+                            }
+                            allChapters += '<option value=' + daf + '>' + i+"b" + '</option>';
+                        } 
+                        
+                    } else {
+                        allChapters += '<option value=' + i + '>' + i + '</option>';
+                    }
+                }
+                chapter.onchange = function() { 
+                    onChangeChapter(this.id,this.value); 
+                };
+                chapter.innerHTML = allChapters;
+                chapter.selectedIndex = selectedIndex;
+                onChangeChapter('', selectedValue);
+                //console.debug('toto : ' + allChapters);
+                isLoading = true;
+                loadingStyle(true);
+                relaunch();
+            }
+        });
+    }
+ }
+ function onChangeChapter(id, value) {
+     var par_book = getParameterByName('book');
+     var par_chapter = getParameterByName('chapter');
+     if(par_book != getMasechetName() || par_chapter != value)
+         window.location.search = '?book='+ getMasechetName() + "&chapter=" + value;
+ } 
+
+ relaunchTableOfContent();
+
+ var p_commentator = getHashFromLocationHash("commentator");
+ var p_targum = getHashFromLocationHash("targum");
+ var p_otherComments = getHashFromLocationHash("otherComments");
+ var p_textVersion = getHashFromLocationHash("textVersion");
+
+ var p_book = getParameterByName('book');
+ var p_chapter = getParameterByName('chapter');
+ var loadingCategories = ['','','','','',''];
+ var initChapter = false;
+
+ if(p_book != undefined && p_book != null) {
+     var url = "https://www.sefaria.org/api/index/" + p_book;
+        $.ajax({
+            url:url,
+            type:"GET",
+            crossDomain: true,
+            dataType:"jsonp",
+            success: function (data) {
+                if(data.error != undefined) {
+                } else {
+                    loadingCategories = data.categories;
+                    loadingCategories.push(p_book);
+                    if(p_chapter != undefined && p_chapter != null) {
+                        initChapter = true;
+                    }
+                }
+                relaunchTableOfContent();
+
+            }
+        });
+
+ }
+
+ //////////////////////////////////////////////
+
+/* EXPORTING */
+var isLoading = false;
+var isDownloading = false;
+var currentPromise = null;
+function getCurrentFile() {
+        var headers = '<link rel="stylesheet" type="text/css" href="safarien.css">';
+        var title = document.getElementById("TitlePage").innerHTML;
+        var copyright = document.getElementById('CopyrightPage').innerHTML;
+        var license = document.getElementById('licensePage').innerHTML;
+        var hebrewLicense = document.getElementById('hebrewLicensePage').innerHTML;
+        var content = document.getElementById("DynamicText").innerHTML;
+        content = content.replace(/<details /g,"<div ");
+        content = content.replace(/<\/details>/g,"</div>");
+        return allContent = "<html><head>" + headers + "</head><body>" + title + copyright + "<br/>" + license + "<br/>"  + hebrewLicense + "<br/>"  + content + "</body></html>";
+}
+
+
+$('a.exportPage').on('click',function() {
+    downloadCurrentPageMasechet();
+});
+$('a.export').on('click',function() {
+    downloadMasechet();
+});
+
+function downloadCurrentPageMasechet() {
+    var zip = new JSZip();
+    var element = document.getElementById("exportHtml");
+    var filename  = "sefaria" + getMasechetName() + getCurrentPage()+'.html';
+    var allContent  = getCurrentFile();
+    zip.file(filename, allContent);
+    zip.generateAsync({type:"blob"})
+    .then(function(content) {
+        uploadDocument(content);
+    });
+}
+
+function getLastPage() {
+    var maxPage = currentLength-1;
+    if(currentIsGuemara) {
+        maxPage = currentLength - 2;
+    }
+    return maxPage;
+}
+
+function downloadMasechet() {
+    isDownloading = true;
+    var zip = new JSZip();
+    var element = document.getElementById("exportHtml");
+    var zipPromise = $.Deferred();
+    var zipMiddlePromise = $.Deferred().resolve();
+    var promises = [];
+    var j = 0;
+    var maxPage = getLastPage();
+
+    for(i=0; i < maxPage; i++) {
+        promises.push($.Deferred());
+    }
+    promises[0].resolve();
+    var filename  = "sefaria" + getMasechetName() + getCurrentPage()+'.html';
+    var allContent  = getCurrentFile();
+    zip.file(filename, allContent);
+    loadingForDownloadStyle(true,getMasechetName(),getCurrentPage());
+    for(i=0; i < maxPage; i++) {
+        promises[i].then(function() {
+            getNextPage(true).then(function() {
+                currentPromise.then(function() {
+                    var filename  = "sefaria" + getMasechetName() + getCurrentPage()+'.html';
+            loadingForDownloadStyle(true,getMasechetName(),getCurrentPage());
+                    var allContent  = getCurrentFile();
+                    zip.file(filename, allContent);
+                    j = j + 1;
+                    if(j >= maxPage) {
+                        zipPromise.resolve();
+            isDownloading = false;
+            } else {
+                        promises[j].resolve();
+                    }
+                });
+            });
+        });
+    }
+    zipPromise.then(function() {
+    loadingForDownloadStyle(true,"","","all daf retrieved... zipping content");
+    zip.generateAsync({type:"blob"})
+        .then(function(content) {
+        uploadDocument(content);
+        });
+    });
+}
+
+function generateEbook() { 
+    loadingForDownloadStyle(true,"","","generating epub : server is working");
+    console.debug("begin generation");
+$.ajax({
+  type: "POST",
+  url: "./cgi-bin/epubGeneration.py",
+}).done(function(res) {
+    console.debug(res);
+    loadingForDownloadStyle(true,"","","generating epub : downloading");
+    var element = document.getElementById("downloadEpub");
+    element.href = res;
+    element.click();
+    isDownloading = false;
+    loadingForDownloadStyle(false,"","","downloaded");
+    loadingStyle();
+});
+}
+
+function uploadDocument(content) {
+    loadingForDownloadStyle(true,"","","generating epub : uploading");
+    var form = new FormData();
+    form.append('upfile',content,'sefariaContent.zip');
+    form.enctype="multipart/form-data";
+    console.debug(form);
+    $.ajax({
+    url: "http://danou.ddns.net:8000",
+    method: "POST",
+    dataType: 'application/octet-stream',
+    data: form,
+    processData: false,
+    contentType: false,
+    success: function(result){console.debug("success : " + result);},
+    error: function(er){
+        console.debug("err :" + er.toString());
+        generateEbook(); 
+        console.debug("done ! ");
+    },
+    });
+}
+
+var showDots = null;
+function showLoadingDots() {
+    if(showDots == null) { 
+    showDots = setInterval(function(){   
+    //look for the element with id=loadingDots
+    //if not found clear the interval
+    //console.debug(isLoading + " " + showDots);
+    if ($("#loadingDots").length>0) {
+        var dots = '...',i=1;
+    if ($("#loadingDots").html().length==0 || ($("#loadingDots").html().length == dots.length)){
+        $("#loadingDots").html('');
+        var i = 1;
+        } else {
+        i++;
+        }        
+        $("#loadingDots").html($("#loadingDots").html()+".");
+        } else {
+           //clear the interval, if element not found
+           clearInterval(showDots);
+        }         
+    },200); 
+    }
+    if(!isLoading && !isDownloading) {
+    clearInterval(showDots);
+    showDots = null;
+    }
+};
+
+function getChapterName() {
+    return document.getElementById('chapterName').innerHTML;
+}
+
+function getMasechetName() {
+    return currentBookName; 
+}
+
+function getCurrentPage() {
+    var currentPageSelector = document.getElementById("chapterSelect");
+    if(currentPageSelector.selectedIndex == -1) return p_chapter;
+    return currentPageSelector.options[currentPageSelector.selectedIndex].value;
+}
+
+function setCurrentPage(pageName) {
+    var currentPageSelector = document.getElementById("chapterSelect");
+    var options = currentPageSelector.options;
+    for (i= 0; i<options.length; i++) {
+        if (options[i].value===pageName) {
+            options[i].selected= true;
+            break;
+        }
+    }
+}
+
+//keepWindowLocation for export so that it won't stop
+function getNextPage(keepWindowLocation) {
+    var currentPageSelector = document.getElementById("chapterSelect");
+    if(currentPageSelector.selectedIndex == -1) return getCurrentPage() + 1;
+    if(currentPageSelector.selectedIndex < currentPageSelector.length-1) {
+       if(keepWindowLocation) {
+        currentPageSelector.selectedIndex = currentPageSelector.selectedIndex +1;
+        return relaunch();
+       } else
+        window.location.search = '?book='+ getMasechetName() + "&chapter=" + currentPageSelector.options[currentPageSelector.selectedIndex+1].value;
+    }
+    return;
+}
+
+function getPreviousPage() {
+    var currentPageSelector = document.getElementById("chapterSelect");
+    if(currentPageSelector.selectedIndex > 0) {
+        //currentPageSelector.selectedIndex = currentPageSelector.selectedIndex -1;
+        window.location.search = '?book='+ getMasechetName() + "&chapter=" + currentPageSelector.options[currentPageSelector.selectedIndex-1].value;
+    }
+    //return relaunch();
+}
+
+function loadingForDownloadStyle(forceLoading, masechetName, pageNumber,message) {
+    var el1 = document.getElementById("bottomNextPage");
+    var el2 = document.getElementById("bottomPreviousPage");
+    var elLoading = document.getElementById("loadingDiv");
+    var elLoadingText = document.getElementById("loadingText");
+    var titleDiv = document.getElementById("titlePageDiv");
+    var lastPage = getLastPage() + 1;
+    if(currentIsGuemara) {
+        lastPage = (getLastPage()/2)+1;
+        if(lastPage !== lastPage.toFixed()) {
+            lastPage = new Number(lastPage.toFixed());
+            lastPage = lastPage + "a";
+        } else {
+            lastPage = lastPage + "b";
+        }
+    }
+    if(forceLoading) {
+    showLoadingDots();
+        el1.style.display = 'none';
+        el2.style.display = 'none';
+        titleDiv.style.display = 'block';
+    if(message == undefined) {
+        elLoadingText.innerHTML= "downloading " + masechetName + " " + getChapterName() + " " + pageNumber + " / " + lastPage;
+    } else {
+        elLoadingText.innerHTML= message;
+    }
+    elLoading.style.display = 'block';
+
+    } else {
+        titleDiv.style.display = 'none';
+        el1.style.display = 'block';
+        el2.style.display = 'block';
+        elLoading.style.display = 'none';
+        //console.debug("fin !");
+        clearInterval(showDots);
+        showDots = null;
+    }
+}
+
+function loadingStyle(forceLoading) {
+    if(isDownloading) return;
+    var el1 = document.getElementById("bottomNextPage");
+    var el2 = document.getElementById("bottomPreviousPage");
+    var elLoading = document.getElementById("loadingDiv");
+    var elLoadingText = document.getElementById("loadingText");
+    var titleDiv = document.getElementById("titlePageDiv");
+    var exportDiv = document.getElementById("exportDiv");
+    var dynamicText = document.getElementById("DynamicText");
+
+    if(isLoading || forceLoading) {
+        showLoadingDots();
+        el1.style.display = 'none';
+        el2.style.display = 'none';
+        elLoadingText.innerHTML= "loading " + getMasechetName() + " " + getChapterName() + " " + getCurrentPage();
+        elLoading.style.display = 'block';
+        titleDiv.style.display = 'none';
+        exportDiv.style.display = 'none';
+        dynamicText.style.display = 'none';
+    } else {
+        titleDiv.style.display = 'block';
+        el1.style.display = 'block';
+        el2.style.display = 'block';
+        exportDiv.style.display = 'block';
+        elLoading.style.display = 'none';
+        dynamicText.style.display = 'block';
+
+        //console.debug("fin !");
+        clearInterval(showDots);
+        showDots = null;
+    }
+}
+
+var convertBase = function () {
+    function convertBase(baseFrom, baseTo) {
+        return function (num) {
+            return parseInt(num, baseFrom).toString(baseTo);
+        };
+    }
+    convertBase.dec2hex = convertBase(10, 16);
+    convertBase.hex2dec = convertBase(16, 10);
+    return convertBase;
+}();
+
+/*remove cantillation and all kind of voyel or accent*/
+var firstChar = convertBase.hex2dec('591');
+var lastChar = convertBase.hex2dec('5CF');
+var ignoreChars = '';
+for(iii=firstChar; iii<= lastChar; iii++) {
+    var hexa = '\\u0' +  convertBase.dec2hex(iii) + ",";
+    ignoreChars += hexa;
+}
+ignoreChars = ignoreChars.slice(0,-1);
+//ignoreChars += '-,\u[05,־]be,־';
+
+function getCommentNameFromElement(element) {
+    if(element.type != "commentary") return null
+;    var currentCommentator = element.sourceRef.substring(0, element.sourceRef.indexOf(" on "));
+    currentCommentator = currentCommentator == undefined || currentCommentator.length == 0 ? element.sourceRef.substring(0, element.sourceRef.indexOf(getMasechetName())).replace(',','') : currentCommentator;
+    currentCommentator = currentCommentator.trim();
+    if(currentCommentator == undefined || currentCommentator.length == 0) {
+        currentCommentator = element.index_title;
+    }
+    return currentCommentator;
+}
+function getTargumNameFromElement(element) {
+    if(element.type != "targum") return null;
+    var currentCommentator = element.sourceRef.substring(0, element.sourceRef.indexOf(" on "));
+    currentCommentator = currentCommentator == undefined || currentCommentator.length == 0 ? element.sourceRef.substring(0, element.sourceRef.indexOf(getMasechetName())).replace(',','') : currentCommentator;
+    currentCommentator = currentCommentator.trim();
+    if(currentCommentator == undefined || currentCommentator.length == 0) {
+        currentCommentator = element.index_title;
+    }
+    return currentCommentator;
+}
+
+function getOtherCommentsNameFromElement(element) {
+    var currentCommentator = element.sourceRef.substring(0, element.sourceRef.indexOf(" on "));
+    currentCommentator = currentCommentator == undefined || currentCommentator.length == 0 ? element.sourceRef.substring(0, element.sourceRef.indexOf(getMasechetName())).replace(',','') : currentCommentator;
+    currentCommentator = currentCommentator.trim();
+    if(currentCommentator == undefined || currentCommentator.length == 0) {
+        currentCommentator = element.index_title;
+    }
+    return element.category + '__' + currentCommentator;
+}
+
+function commentatorTrim(value1) {
+    var reg1 = new RegExp("'",'g');
+    var reg2 = new RegExp(" ",'g');
+    return value1.replace(reg1, "").replace(reg2,"_");
+}
+
+var currentData = null;
+
+function relaunch() {
+    isLoading = true;
+    currentPromise = new $.Deferred();
+    //console.debug(currentPromise);
+
+var currentVersionName = p_textVersion;
+var currentDocument = getMasechetName();
+var currentPage = getCurrentPage();
+var currentPageString = currentPage == '' ? '' : getChapterName() + " " + currentPage;
+console.debug("masechet : " + currentDocument + " AND page : " + currentPage);
+document.getElementById("TitlePage").innerHTML = "<h1 style='margin:10px'>"+currentDocument + " " + currentPageString + "</h1>"
+document.getElementById("TitlePage").color = "red";
+var referenceToSearch = currentPage !== '' ? currentDocument + "." + currentPage : firstSectionName;
+var versionToSearch = (currentVersionName == "" || currentVersionName == null) ? "" : ("/en/" + currentVersionName);
+var sefariaUrl = "http://www.sefaria.org/api/texts/" + referenceToSearch + versionToSearch;
+currentData = null;
+//console.debug("page" + currentPage + "first : " + sefariaUrl);
+return $.ajax({
+    //url: "./Megillah.2a.json",
+    url:sefariaUrl,
+    type:"GET",
+    crossDomain: true,
+    dataType:"jsonp",
+
+    success: function (data) {
+        currentData = data;
+        var container = document.getElementById("DynamicText");
+        container.innerHTML = "";
+        /////////////////////////COMMENTATOR LIST
+        var dynamicCommentator = document.getElementById("dynamicCommentator");
+        dynamicCommentator.innerHTML = "";
+        var dynamicTargum = document.getElementById("dynamicTargum");
+        dynamicTargum.innerHTML = "";
+        var dynamicOtherComments = document.getElementById("dynamicOtherComments");
+        dynamicOtherComments.innerHTML = "";
+        var allCommentariesName = [];
+        var allTargumName = [];
+        var allOtherCommentsName = [];
+
+        currentData.commentary.forEach(function(element) {
+            var currentCommentator = getCommentNameFromElement(element);
+            if(currentCommentator == "Rashi") currentCommentator = undefined;
+            if(currentCommentator != undefined && currentCommentator.length > 0 && allCommentariesName.indexOf(currentCommentator) < 0)
+                allCommentariesName.push(currentCommentator);
+            var currentTargum = getTargumNameFromElement(element);
+            if(currentTargum != undefined && currentTargum.length > 0 && allTargumName.indexOf(currentTargum) < 0)
+                allTargumName.push(currentTargum);
+            var otherComm = getOtherCommentsNameFromElement(element);
+            if(otherComm != undefined && otherComm != null && otherComm.length > 0 && allOtherCommentsName.indexOf(otherComm) < 0
+                && element.type != "commentary" && element.type != "targum"
+                )
+                allOtherCommentsName.push(otherComm);
+        });
+        allCommentariesName.sort().forEach(function(element) {
+            var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.name = element;
+            checkbox.className = "commentatorCheckBox";
+            if(p_commentator.indexOf(commentatorTrim(element)) >= 0 )
+                checkbox.checked = true;
+            else
+                checkbox.checkbox = false;
+
+            checkbox.id = "id"+element;
+            checkbox.onchange = function(me) { 
+                var name = commentatorTrim(me.currentTarget.name);
+                var el = document.getElementById(me.currentTarget.id);
+                //console.debug("el " + me.currentTarget.id);
+                //console.debug(el);
+                if(!el.checked)
+                    p_commentator = p_commentator.replace(name+";","");
+                else
+                    p_commentator = p_commentator + name + ";";
+
+                var comms = document.getElementsByClassName("commentator"+name);
+                if(el.checked) {
+                    for(var i=0; i < comms.length; i++){
+                        comms[i].style.display = 'block';
+                    };
+                } else {
+                    for(var i=0; i < comms.length; i++){
+                        comms[i].style.display = 'none';
+                    };
+                }
+                updateWindowLocationHash("commentator",p_commentator);
+            };
+            var label = document.createElement('label');
+            label.htmlFor = "id"+element;
+            label.appendChild(document.createTextNode(element));
+
+            dynamicCommentator.appendChild(checkbox);
+            dynamicCommentator.appendChild(label);
+        });
+        //Targum list
+        allTargumName.sort().forEach(function(element) {
+            var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.name = element;
+            checkbox.className = "targumCheckBox";
+                 console.debug("aaaaaaaaaaah !" + p_targum);
+
+            if(p_targum.indexOf(commentatorTrim(element)) >= 0 )
+                checkbox.checked = true;
+            else
+                checkbox.checkbox = false;
+
+            checkbox.id = "id"+element;
+            checkbox.onchange = function(me) { 
+                var name = commentatorTrim(me.currentTarget.name);
+                var el = document.getElementById(me.currentTarget.id);
+                //console.debug("el " + me.currentTarget.id);
+                //console.debug(el);
+                if(!el.checked)
+                    p_targum = p_targum.replace(name+";","");
+                else
+                    p_targum = p_targum + name + ";";
+
+                var comms = document.getElementsByClassName("targum"+name);
+                if(el.checked) {
+                    for(var i=0; i < comms.length; i++){
+                        comms[i].style.display = 'block';
+                    };
+                } else {
+                    for(var i=0; i < comms.length; i++){
+                        comms[i].style.display = 'none';
+                    };
+                }
+                updateWindowLocationHash("targum",p_targum);
+            };
+            var label = document.createElement('label');
+            label.htmlFor = "id"+element;
+            label.appendChild(document.createTextNode(element));
+
+            dynamicTargum.appendChild(checkbox);
+            dynamicTargum.appendChild(label);
+        });
+        //OtherComments list
+        tmp_categoryOther = [];
+        currentDetail = null;
+        allOtherCommentsName.sort().forEach(function(element) {
+            if(tmp_categoryOther )
+            //console.debug("alors !!!?");
+            var categoryName = element.substring(0,element.indexOf('__'));
+            var sourceName = element.substring(element.indexOf('__')+2,element.length);
+            if(tmp_categoryOther.indexOf(categoryName) == -1) {
+                var titleCategoryCommentDetails = document.createElement("details");
+                var titleCategoryCommentSummaryText = document.createElement("summary");
+
+                var textTitle = document.createTextNode(categoryName);
+                titleCategoryCommentSummaryText.appendChild(textTitle);
+                titleCategoryCommentDetails.appendChild(titleCategoryCommentSummaryText);
+                tmp_categoryOther.push(categoryName);
+                titleCategoryCommentDetails.open = false;
+                dynamicOtherComments.appendChild(titleCategoryCommentDetails);
+                currentDetail = titleCategoryCommentDetails;
+            }
+            //console.debug(categoryName);
+            //console.debug(sourceName);
+            var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.name = element;
+            checkbox.className = "otherCommentsCheckBox";
+            if(p_otherComments.indexOf(commentatorTrim(element)) >= 0 )
+                checkbox.checked = true;
+            else
+                checkbox.checkbox = false;
+
+            checkbox.id = "id"+element;
+            checkbox.onchange = function(me) { 
+                var name = commentatorTrim(me.currentTarget.name);
+                var el = document.getElementById(me.currentTarget.id);
+                //console.debug("el " + me.currentTarget.id);
+                //console.debug(el);
+                if(!el.checked)
+                    p_otherComments = p_otherComments.replace(name+";","");
+                else
+                    p_otherComments = p_otherComments + name + ";";
+
+                var comms = document.getElementsByClassName("otherComments"+name);
+                if(el.checked) {
+                    for(var i=0; i < comms.length; i++){
+                        comms[i].style.display = 'block';
+                    };
+                } else {
+                    for(var i=0; i < comms.length; i++){
+                        comms[i].style.display = 'none';
+                    };
+                }
+                updateWindowLocationHash("otherComments",p_otherComments);
+            };
+            var label = document.createElement('label');
+            label.htmlFor = "id"+element;
+            label.appendChild(document.createTextNode(sourceName));
+
+            currentDetail.appendChild(checkbox);
+            currentDetail.appendChild(label);
+        });
+
+
+        var versionSelect = document.getElementById("versionSelect");
+        var allVersions = "";
+        var firstUncopyrightVersion = null;
+        var toReload = false;
+        currentData.versions.forEach(function(element) {
+            var nameForUrl = element.versionTitle.replace(new RegExp(" ","g"),"_");
+            var newCurrentVersion = '<option value="' + nameForUrl + '">' + element.versionTitle + '</option>';
+            if(nameForUrl == p_textVersion || p_textVersion == "" && firstUncopyrightVersion == null) {
+                newCurrentVersion = '<option selected value="' + nameForUrl + '">' + element.versionTitle + '</option>';
+                var copyrightPage = document.getElementById('CopyrightPage');
+                var licensePage = document.getElementById('licensePage');
+                copyrightPage.innerHTML = "<u>version</u> : " + element.versionTitle;
+                licensePage.innerHTML = "<u>license</u> : " + element.license;
+                if(element.license.toLowerCase().indexOf("copyright") >= 0) {
+                    toReload = true;
+                }
+            }
+            if(element.license.toLowerCase().indexOf("copyright") < 0) {
+                allVersions += newCurrentVersion;
+                if(firstUncopyrightVersion == null) {
+                    firstUncopyrightVersion = nameForUrl;
+                }
+            }
+        });
+        var hebrewLicensePage = document.getElementById('hebrewLicensePage');
+        hebrewLicensePage.innerHTML = "<u>hebrew license</u> : " + currentData.heLicense;
+        versionSelect.innerHTML = allVersions;
+        ///////////////////////////printing text
+        for (i = 0; i < currentData.he.length; i++) {
+            var passoukNumber = currentIsInteger ? '<span style="display:inline" class="passoukNumber">(' + (i+1) + ')</span> ' : '';
+            var currentBlock = document.createElement("div");
+            currentBlock.className = "currentBlock";
+            //currentBlock.style.background //= "#FFFFFF";
+            var hebrewText = document.createElement("div");
+            hebrewText.className = "hebrewContent";
+            hebrewText.innerHTML = "<blockquote>" + passoukNumber + currentData.he[i].replace(new RegExp("'",'g'),"׳")+"</blockquote>";
+            currentBlock.setAttribute("dir","rtl");
+            hebrewText.setAttribute("dir","rtl");
+
+            var regexp = /\([^\)]*\)/gi;
+            var tableau_correspondances = currentData.he[i].match(regexp);
+            var referenceText = document.createElement("details");
+            if(tableau_correspondances != null && tableau_correspondances.length > 0) {
+                for(n = 0; n < tableau_correspondances.length; n++) {
+                    var referenceSummaryText = document.createElement("summary");
+                    if(n == 0) referenceSummaryText.innerHTML = "<u>source</u>";
+                    referenceText.style.color = "#4d658c";
+                    referenceText.className = "rectForReference";
+                    referenceText.setAttribute("dir","ltr");
+
+                    var allReferencesBlock = currentData.commentary.filter(function(el) { 
+                        var documentName = el.anchorRef.substr(0, el.anchorRef.indexOf(' '));
+                        var strRefCurrent = new RegExp(documentName + ".*" + currentPage + ":" + new Number(i+1));
+                        var referenceType = tableau_correspondances[n].substring(1,tableau_correspondances[n].length-1);
+                        //console.debug(documentName + " tojgrojpreg" + el.anchorRef + " et " + strRefCurrent + " et " + referenceType + " et " + el.heTitle)
+                        return strRefCurrent.test(el.anchorRef) && referenceType.startsWith(el.heTitle);
+                    });
+                    if(allReferencesBlock != undefined && allReferencesBlock.length > 0) {
+                        referenceText.appendChild(referenceSummaryText);
+                        for(j = 0; j < allReferencesBlock.length; j++) {
+                            var currentHebrewReferencesText = document.createElement("div");
+                            var hebrewReferenceText = allReferencesBlock[j].he;
+                            currentHebrewReferencesText.innerHTML = "<u>" +allReferencesBlock[j].sourceHeRef + "</u> : " + hebrewReferenceText;
+                            currentHebrewReferencesText.setAttribute("dir","rtl");
+                            currentHebrewReferencesText.className = "hebrewContent";
+
+                            var currentEnghlishReferencesText = document.createElement("p");
+                            currentEnghlishReferencesText.innerHTML = allReferencesBlock[j].text;
+
+                            referenceText.appendChild(currentHebrewReferencesText);
+                            referenceText.appendChild(currentEnghlishReferencesText);
+
+                            //underline References//
+                            var referenceInText = tableau_correspondances[n];
+                            if(hebrewReferenceText != undefined && hebrewReferenceText != null && typeof hebrewReferenceText === 'string') {
+                              hebrewText.innerHTML = hebrewText.innerHTML.replace(referenceInText, 
+                                  //"<u><a class='tags' glose='" +hebrewReferenceText.replace("'","`").replace(new RegExp("<u>","g"),"").replace(new RegExp("</u>","g"),"") +"'>" + referenceInText + "</a></u>");
+                                  "<u>" + referenceInText + "</u>");
+                            }
+                        }
+                    }
+                }
+            } 
+
+            var englishText = document.createElement("p");
+            englishText.innerHTML = currentData.text[i];
+            englishText.className = 'latinContent';
+            englishText.setAttribute("dir","ltr");
+
+       //////////// RASHI
+            var rashiText = document.createElement("details");
+            var rashiSummaryText = document.createElement("summary");
+            rashiText.appendChild(rashiSummaryText);
+            rashiSummaryText.innerHTML = "Rashi  -  רש\"י";
+            rashiText.style.color = "#4d658c";
+            rashiText.className = "rectForRashi commentator commentatorRashi";
+
+            var allRashiBlock = currentData.commentary.filter(function(el) { 
+                var documentName = el.anchorRef.substr(0, el.anchorRef.indexOf(' '));
+                var strRashiCurrent = new RegExp("Rashi on " + documentName + ".* " + currentPage + "[^0-9]*:" + new Number(i+1) + "[^0-9]*:.*");
+                return (el.commentator == "Rashi" || (el.commentator == undefined && el.ref.startsWith("Rashi"))) && strRashiCurrent.test(el.sourceRef);
+            });
+
+
+            if(allRashiBlock != undefined && allRashiBlock.length > 0) {
+                
+                for(j = 0; j < allRashiBlock.length; j++) {
+                    var currentHebrewRashiText = document.createElement("div");
+                    currentHebrewRashiText.innerHTML = allRashiBlock[j].he;
+                    currentHebrewRashiText.setAttribute("dir","rtl");
+                    currentHebrewRashiText.className = "hebrewContent rashiContent";
+
+                    var currentEnghlishRashiText = document.createElement("p");
+                    currentEnghlishRashiText.innerHTML = allRashiBlock[j].text;
+                    currentEnghlishRashiText.className = "latinContent rashiContent";
+                    currentEnghlishRashiText.setAttribute("dir","ltr");
+
+                    rashiText.appendChild(currentHebrewRashiText);
+                    if(allRashiBlock[j].text !== undefined && allRashiBlock[j].text !== null) rashiText.appendChild(currentEnghlishRashiText);
+
+                    //document.createTextNode(allRashiBlock[j].he)
+                    //underline rashi//
+                    if(allRashiBlock[j].he == undefined || allRashiBlock[j].he == null || allRashiBlock[j].he == '') {
+                        continue;
+                    }
+                    var dibourHamatril = allRashiBlock[j].he.substring(0,allRashiBlock[j].he.indexOf("-")-1);
+                    if(dibourHamatril === "") {
+                        dibourHamatril = allRashiBlock[j].he.substring(0,allRashiBlock[j].he.indexOf("–")-1);
+                    }
+                    if(dibourHamatril === "") {
+                        var indexOfTwoPoints = allRashiBlock[j].he.indexOf(":");
+                        if(indexOfTwoPoints-1 >= allRashiBlock[j].he.length)
+                        dibourHamatril = allRashiBlock[j].he.substring(0,indexOfTwoPoints-1);
+                    }
+                    if(dibourHamatril === "") {
+                        dibourHamatril = allRashiBlock[j].he.substring(0,allRashiBlock[j].he.indexOf("."));
+                    }
+                    if(dibourHamatril === "") {
+                        dibourHamatril = allRashiBlock[j].he.substring(0,allRashiBlock[j].he.indexOf(".")-1);
+                    }
+                    if(dibourHamatril === "") {
+                        dibourHamatril = allRashiBlock[j].he.substring(allRashiBlock[j].he.indexOf("<b>")-1,allRashiBlock[j].he.indexOf("</b>"));
+                    }
+                    
+                    if(dibourHamatril !== "" && dibourHamatril.length < allRashiBlock[j].he.length) {
+                        currentHebrewRashiText.innerHTML = currentHebrewRashiText.innerHTML.replace(dibourHamatril, "<u><strong> " + dibourHamatril + " </strong></u>");
+
+                       //var regexp = /\([^\(]*\)/gi;
+                       //var tableau_correspondances = currentData.he[i].match(regexp);
+                        var regexp = "";
+                        var dibourHamatrilForRegex = dibourHamatril.replace(" וכו'","").replace(" כו'","").replace(" וגו'","").replace("[","").replace("]","").replace(new RegExp("/",'g'),"").replace("\\","").replace(new RegExp("\\(",'g'),"").replace(new RegExp("\\)",'g'),"").replace(new RegExp("<b>",'g'),"").replace(new RegExp('</b>','g'),'').replace(new RegExp("<strong>",'g'),"").replace(new RegExp('</strong>','g'),'').replace(new RegExp(" ",'g'),"").replace('/','');
+
+                        //console.debug("aaaaaaaaa : " + dibourHamatrilForRegex);
+                        for (zz = 0; zz < dibourHamatrilForRegex.length-1; zz++) {
+                                regexp = regexp + dibourHamatrilForRegex[zz].replace("'","׳") + "([\ ])*(<[^>]*>)*([" + ignoreChars + "])*([\ ])*";
+                        }
+                        if(dibourHamatrilForRegex[zz] != " ")
+                            regexp = regexp + dibourHamatrilForRegex[zz];
+                        //console.debug(regexp);
+                        //console.debug(dibourHamatrilForRegex[zz]);
+                        var dibourHamtrilWithTags = hebrewText.innerHTML.match(regexp);
+                        if(dibourHamtrilWithTags != null && dibourHamtrilWithTags.length > 0) {
+                            //hebrewText.innerHTML = hebrewText.innerHTML.replace(dibourHamtrilWithTags[0], "<u>" + dibourHamtrilWithTags[0] + "</u>");
+                            hebrewText.innerHTML = hebrewText.innerHTML.replace(//dibourHamtrilWithTags[0], "<u><a class='tags' glose='" +allRashiBlock[j].he.replace(new RegExp("'",'g'),"`").replace(new RegExp("'",'g'),"`").replace(new RegExp("<b>",'g'),"").replace(new RegExp("</b>",'g'),"").replace(new RegExp("<strong>",'g'),"").replace(new RegExp('</strong>','g'),'').replace(new RegExp('<u>','g'),"").replace(new RegExp('</u>','g'),"") +"'> " + dibourHamtrilWithTags[0] + "</a></u>");
+                            dibourHamtrilWithTags[0], "<u>" + dibourHamtrilWithTags[0] + "</u>");
+                        }
+                    }
+                }
+            } else {
+                rashiText = document.createElement("div");
+            }
+
+            ///////////////////COMMENTARY
+            var allCommentaryBlock = currentData.commentary.filter(function(el) { 
+                var strRefCurrent = new RegExp(" " + currentPage + ":" + new Number(i+1) + "$");
+                return el.type == "commentary" && strRefCurrent.test(el.anchorRef) && !el.sourceRef.startsWith("Rashi");
+            });
+            allCommentaryBlock.sort(function(a,b) { return a.sourceRef > b.sourceRef ? 1 : a.sourceRef < b.sourceRef ? -1 : 0; });
+            var allCommentaries = [];
+
+            var currentCommentator = null;
+            var previousCommentator = null;
+            var commentaryText = null;
+            var commentarySummaryText = null;
+            if(allCommentaryBlock != undefined && allCommentaryBlock.length > 0) {
+                for(j = 0; j < allCommentaryBlock.length; j++) {
+                    currentCommentator = getCommentNameFromElement(allCommentaryBlock[j]);
+
+                    if(currentCommentator != previousCommentator) {
+                        commentaryText = document.createElement("details");
+                        commentarySummaryText = document.createElement("summary");
+                        commentaryText.appendChild(commentarySummaryText);
+                        commentarySummaryText.innerHTML = allCommentaryBlock[j].collectiveTitle == undefined ? currentCommentator : currentCommentator + " - " + allCommentaryBlock[j].collectiveTitle.he;
+
+                        commentaryText.style.color = "#4d658c";
+                        commentaryText.className = "rectForCommentary " + " commentator " + "commentator"+commentatorTrim(currentCommentator);
+                        if(p_commentator.indexOf(commentatorTrim(currentCommentator)) < 0) {
+                            commentaryText.style.display = 'none';
+                        } else {
+                            commentaryText.style.display = 'block';
+                        }
+                        previousCommentator = currentCommentator;
+                        allCommentaries.push(commentaryText);
+                    }
+                    var currentHebrewCommentaryText = document.createElement("div");
+                    currentHebrewCommentaryText.innerHTML = allCommentaryBlock[j].he;
+                    currentHebrewCommentaryText.setAttribute("dir","rtl");
+                    currentHebrewCommentaryText.className = "hebrewContent";
+
+                    var currentEnghlishCommentaryText = document.createElement("p");
+                    currentEnghlishCommentaryText.innerHTML = allCommentaryBlock[j].text;
+                    currentEnghlishCommentaryText.className = "latinContent rashiContent";
+                    currentEnghlishCommentaryText.setAttribute("dir","ltr");
+
+                    var currentEnghlishCommentaryText = document.createElement("p");
+                    currentEnghlishCommentaryText.className = "latinContent rashiContent";
+                    currentEnghlishCommentaryText.innerHTML = allCommentaryBlock[j].text != "" ? "<u>" + allCommentaryBlock[j].sourceRef + "</u> : " +allCommentaryBlock[j].text : null;
+                    currentEnghlishCommentaryText.setAttribute("dir","ltr");
+
+                    commentaryText.appendChild(currentHebrewCommentaryText);
+                    commentaryText.appendChild(currentEnghlishCommentaryText);
+                }
+            }
+
+            ///////////////////TARGUM
+            var allTargumBlock = currentData.commentary.filter(function(el) { 
+                var strRefCurrent = new RegExp(" " + currentPage + ":" + new Number(i+1) + "$");
+                return el.type == "targum" && strRefCurrent.test(el.anchorRef);
+            });
+            allTargumBlock.sort(function(a,b) { return a.sourceRef > b.sourceRef ? 1 : a.sourceRef < b.sourceRef ? -1 : 0; });
+            var allTargum = [];
+
+            var currentTargum = null;
+            var previousTargum = null;
+            var targumText = null;
+            var targumSummaryText = null;
+            if(allTargumBlock != undefined && allTargumBlock.length > 0) {
+                for(j = 0; j < allTargumBlock.length; j++) {
+                    currentTargum = getTargumNameFromElement(allTargumBlock[j]);
+                    //console.debug(currentTargum);
+                    //console.debug(allTargumBlock[j]);
+                    if(currentTargum == null) continue;
+                    if(currentTargum != previousTargum) {
+                        targumText = document.createElement("details");
+                        targumSummaryText = document.createElement("summary");
+                        targumText.appendChild(targumSummaryText);
+                        targumSummaryText.innerHTML = allTargumBlock[j].collectiveTitle == undefined ? currentTargum : currentTargum + " - " + allTargumBlock[j].collectiveTitle.he;
+                        targumText.style.color = "#4d658c";
+                        targumText.className = "rectForTargum targum " + "targum"+commentatorTrim(currentTargum);
+                        if(p_targum.indexOf(commentatorTrim(currentTargum)) < 0) {
+                            targumText.style.display = 'none';
+                        } else {
+                            targumText.style.display = 'block';
+                        }
+                        previousTargum = currentTargum;
+                        allTargum.push(targumText);
+                    }
+                    var currentHebrewTargumText = document.createElement("div");
+                    currentHebrewTargumText.innerHTML = allTargumBlock[j].he;
+                    currentHebrewTargumText.setAttribute("dir","rtl");
+                    currentHebrewTargumText.className = "hebrewContent";
+
+                    var currentEnghlishTargumText = document.createElement("p");
+                    currentEnghlishTargumText.innerHTML = allTargumBlock[j].text;
+                    currentEnghlishTargumText.className = "latinContent rashiContent";
+                    currentEnghlishTargumText.setAttribute("dir","ltr");
+
+                    var currentEnghlishTargumText = document.createElement("p");
+                    currentEnghlishTargumText.className = "latinContent rashiContent";
+                    currentEnghlishTargumText.innerHTML = allTargumBlock[j].text != "" ? "<u>" + allTargumBlock[j].sourceRef + "</u> : " +allTargumBlock[j].text : null;
+                    currentEnghlishTargumText.setAttribute("dir","ltr");
+
+                    if(allTargumBlock[j].he != undefined && allTargumBlock[j].he != null && allTargumBlock[j].he != "")
+                        targumText.appendChild(currentHebrewTargumText);
+                    if(allTargumBlock[j].text != undefined && allTargumBlock[j].text != null && allTargumBlock[j].text != "")
+                        targumText.appendChild(currentEnghlishTargumText);
+                }
+            }
+
+            ///////////////////OTHER COMMENTS
+            var allOtherCommentsBlock = currentData.commentary.filter(function(el) { 
+                var strRefCurrent = new RegExp(" " + currentPage + ":" + new Number(i+1) + "$");
+                return el.type != "commentary" && el.type != "targum" && strRefCurrent.test(el.anchorRef);
+            });
+            allOtherCommentsBlock.sort(function(a,b) { return a.sourceRef > b.sourceRef ? 1 : a.sourceRef < b.sourceRef ? -1 : 0; });
+            var allOtherComments = [];
+
+            var currentOtherComments = null;
+            var previousOtherComments = null;
+            var otherCommentsText = null;
+            var otherCommentsSummaryText = null;
+            if(allOtherCommentsBlock != undefined && allOtherCommentsBlock.length > 0) {
+                for(j = 0; j < allOtherCommentsBlock.length; j++) {
+                    currentOtherComments = getOtherCommentsNameFromElement(allOtherCommentsBlock[j]);
+                    if(currentOtherComments == null) continue;
+                    if(currentOtherComments != previousOtherComments) {
+                        otherCommentsText = document.createElement("details");
+                        otherCommentsSummaryText = document.createElement("summary");
+                        otherCommentsText.appendChild(otherCommentsSummaryText);
+                        otherCommentsSummaryText.innerHTML = allOtherCommentsBlock[j].collectiveTitle == undefined ? currentOtherComments.substring(currentOtherComments.indexOf("__")+2, currentOtherComments.length) : currentOtherComments.substring(currentOtherComments.indexOf("__")+2, currentOtherComments.length) + "  -  " + allOtherCommentsBlock[j].collectiveTitle.he;
+                        otherCommentsText.style.color = "#4d658c";
+                        otherCommentsText.className = "rectForOtherComments otherComments " + allOtherCommentsBlock[j].category + " otherComments"+commentatorTrim(currentOtherComments);
+                        if(p_otherComments.indexOf(commentatorTrim(currentOtherComments)) < 0) {
+                            otherCommentsText.style.display = 'none';
+                        } else {
+                            otherCommentsText.style.display = 'block';
+                        }
+                        previousOtherComments = currentOtherComments;
+                        allOtherComments.push(otherCommentsText);
+                    }
+                    var currentHebrewOtherCommentsText = document.createElement("div");
+                    currentHebrewOtherCommentsText.innerHTML = allOtherCommentsBlock[j].he;
+                    currentHebrewOtherCommentsText.setAttribute("dir","rtl");
+                    currentHebrewOtherCommentsText.className = "hebrewContent";
+
+                    var currentEnghlishOtherCommentsText = document.createElement("p");
+                    currentEnghlishOtherCommentsText.innerHTML = allOtherCommentsBlock[j].text;
+                    currentEnghlishOtherCommentsText.className = "latinContent rashiContent";
+                    currentEnghlishOtherCommentsText.setAttribute("dir","ltr");
+
+                    var currentEnghlishOtherCommentsText = document.createElement("p");
+                    currentEnghlishOtherCommentsText.className = "latinContent rashiContent";
+                    currentEnghlishOtherCommentsText.innerHTML = allOtherCommentsBlock[j].text != "" ? "<u>" + allOtherCommentsBlock[j].sourceRef + "</u> : " +allOtherCommentsBlock[j].text : null;
+                    currentEnghlishOtherCommentsText.setAttribute("dir","ltr");
+
+                    if(allOtherCommentsBlock[j].he != undefined && allOtherCommentsBlock[j].he != null && allOtherCommentsBlock[j].he != "")
+                        otherCommentsText.appendChild(currentHebrewOtherCommentsText);
+                    if(allOtherCommentsBlock[j].text != undefined && allOtherCommentsBlock[j].text != null && allOtherCommentsBlock[j].text != "")
+                    otherCommentsText.appendChild(currentEnghlishOtherCommentsText);
+                }
+            }
+
+            if(toReload) {
+                isLoading = false;
+                loadingStyle(false);
+                currentPromise.resolve();
+                var copyrightPage = document.getElementById('CopyrightPage');
+                var v = copyrightPage.innerHTML.replace("<u>version</u> : ","");
+                onVersionSelectChanged(firstUncopyrightVersion);
+                swal({ title:v, text: "is under copyright.\nPlease visit Sefaria.org to read that version.\n\nLoading accessible version...", type: "warning", timer:5000 });
+                return;
+            }
+            ////////////////////Adding elements
+            currentBlock.appendChild(hebrewText);
+            if(referenceText != undefined && referenceText != null && referenceText.childNodes.length > 2) {
+                currentBlock.appendChild(referenceText);
+            }
+            if(englishText != undefined && englishText != null && englishText.innerHTML != undefined && englishText.innerHTML != null && englishText.innerHTML.length > 0 && englishText.innerHTML != 'undefined' && !toReload) {
+                currentBlock.appendChild(englishText);
+            }
+            if(allTargum != undefined && allTargum != null && allTargum.length > 0) {
+                allTargum.forEach(function(commentElement) {
+                    currentBlock.appendChild(commentElement);
+                });
+            }
+            if(rashiText != undefined && rashiText != null && rashiText.childNodes.length > 0) {
+                currentBlock.appendChild(rashiText);
+            }
+            if(allCommentaries != undefined && allCommentaries != null && allCommentaries.length > 0) {
+                allCommentaries.forEach(function(commentElement) {
+                    currentBlock.appendChild(commentElement);
+                });
+            }
+            if(allOtherComments != undefined && allOtherComments != null && allOtherComments.length > 0) {
+                allOtherComments.forEach(function(commentElement) {
+                    currentBlock.appendChild(commentElement);
+                });
+            }
+            container.appendChild(currentBlock);
+
+        }
+        isLoading = false;
+        loadingStyle(false);
+        console.debug("fini !");
+        currentPromise.resolve();
+
+    }
+
+});
+}
+     </script>
+    </body>
+</html>

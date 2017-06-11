@@ -1,0 +1,737 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="safarien.css">
+</head>
+<body>
+<br/>
+	    <div style="float:left;" id="masechtaselection"></div>
+	    <div style="float:left;" id="amudselection"></div>
+<br/>
+<br/>
+<div id="titlePageDiv">
+    <p id="TitlePage" name="TitlePage" class="chapter"></p>
+    <div class="container" id="exportDiv" style="display:none">
+	<div style="float:left">
+	<img style="vertical-align:top" src="./img/epubLogo.png" width="48" height="48" alt="export current page in epub"</img>
+    </div>
+    <div>
+	<a href="#" class="exportPage" id="exportHtml">Download current page </a>
+	<br />
+	<a href="#" class="export" id="exportHtml">Download all Masechet</a>
+    </div>
+</div>
+
+</div>
+
+<a href="#" style="visibility:never" id="downloadEpub"></a>
+<!--a href="./safarien.css" download="safarien.css">Download style</a>
+<a href="#" class="exportFonts">Download fonts</a>
+<a href="./cgi-bin/epubGen/writeBook.py" class="exportScript">Download script</a-->
+
+<button style="float:right" onclick="getNextPage(false)">Next page</button>
+<button style="float:right; margin-right:5px;" onclick="getPreviousPage()">Previous page</button>
+
+<div id="loadingDiv">
+    <span style="font-size:2em"><span id="loadingText"></span>
+	<span id="loadingDots">
+	</span>
+    </span>
+</div>
+
+<br/>
+
+<div id="DynamicText" name="DynamicText">
+</div>
+
+<br/>
+<button id="bottomNextPage" style="float:right;display:none" onclick="getNextPage(false)">Next page</button>
+<button id="bottomPreviousPage" style="float:right; margin-right:5px;display:none" onclick="getPreviousPage()">Previous page</button>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="./dist/jszip.js"></script>
+<script src="./dist/FileSaver.js"></script>
+
+<!--script src="jquery-3.1.1.min.js"></script-->
+<script type="text/javascript">
+
+/* PARAMATERS HANDLING */
+function getParameterByName(name, url) {
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+/* EXPORTING */
+var isLoading = false;
+var isDownloading = false;
+var currentPromise = null;
+function getCurrentFile() {
+        var headers = '<link rel="stylesheet" type="text/css" href="safarien.css">';
+        var title = document.getElementById("TitlePage").innerHTML;
+        var content = document.getElementById("DynamicText").innerHTML;
+        content = content.replace(/<details /g,"<div ");
+        content = content.replace(/<\/details>/g,"</div>");
+        return allContent = "<html><head>" + headers + "</head><body>" + title + content + "</body></html>";
+}
+
+
+$('a.exportPage').on('click',function() {
+    downloadCurrentPageMasechet();
+});
+$('a.export').on('click',function() {
+    downloadMasechet();
+});
+
+function downloadCurrentPageMasechet() {
+    var zip = new JSZip();
+    var element = document.getElementById("exportHtml");
+    var filename  = "sefaria" + getMasechetName() + getCurrentPage()+'.html';
+    var allContent  = getCurrentFile();
+    zip.file(filename, allContent);
+    zip.generateAsync({type:"blob"})
+	.then(function(content) {
+	    uploadDocument(content);
+	});
+}
+
+function downloadMasechet() {
+    isDownloading = true;
+    var zip = new JSZip();
+    var element = document.getElementById("exportHtml");
+    var zipPromise = $.Deferred();
+    var zipMiddlePromise = $.Deferred().resolve();
+    var promises = [];
+    var j = 0;
+    var maxPage = currentAmudTotalNumber-1;
+    for(i=0; i < maxPage; i++) {
+        promises.push($.Deferred());
+    }
+    promises[0].resolve();
+    var filename  = "sefaria" + getMasechetName() + getCurrentPage()+'.html';
+    var allContent  = getCurrentFile();
+    zip.file(filename, allContent);
+    loadingForDownloadStyle(true,getMasechetName(),getCurrentPage());
+    for(i=0; i < maxPage; i++) {
+        promises[i].then(function() {
+            getNextPage(true).then(function() {
+                currentPromise.then(function() {
+                    var filename  = "sefaria" + getMasechetName() + getCurrentPage()+'.html';
+		    loadingForDownloadStyle(true,getMasechetName(),getCurrentPage());
+                    var allContent  = getCurrentFile();
+                    zip.file(filename, allContent);
+                    j = j + 1;
+                    if(j >= maxPage) {
+                        zipPromise.resolve();
+			isDownloading = false;
+		    } else {
+                        promises[j].resolve();
+                    }
+                });
+            });
+        });
+    }
+    zipPromise.then(function() {
+	loadingForDownloadStyle(true,"","","all daf retrieved... zipping content");
+	zip.generateAsync({type:"blob"})
+	    .then(function(content) {
+		uploadDocument(content);
+	    });
+    });
+}
+
+function generateEbook() { 
+    loadingForDownloadStyle(true,"","","generating epub : server is working");
+    console.debug("begin generation");
+$.ajax({
+  type: "POST",
+  url: "./cgi-bin/epubGeneration.py",
+}).done(function(res) {
+    	console.debug(res);
+	loadingForDownloadStyle(true,"","","generating epub : downloading");
+	var element = document.getElementById("downloadEpub");
+	element.href = res;
+	element.click();
+	isDownloading = false;
+	loadingForDownloadStyle(false,"","","downloaded");
+	loadingStyle();
+});
+}
+
+function uploadDocument(content) {
+    loadingForDownloadStyle(true,"","","generating epub : uploading");
+    var form = new FormData();
+    form.append('upfile',content,'sefariaContent.zip');
+    form.enctype="multipart/form-data";
+    console.debug(form);
+    $.ajax({
+	url: "http://danou.ddns.net:8000",
+	method: "POST",
+	dataType: 'application/octet-stream',
+	data: form,
+	processData: false,
+	contentType: false,
+	success: function(result){console.debug("success : " + result);},
+	error: function(er){
+	    console.debug("err :" + er.toString());
+	    generateEbook(); 
+	    console.debug("done ! ");
+	},
+    });
+}
+
+var showDots = null;
+function showLoadingDots() {
+    if(showDots == null) { 
+	showDots = setInterval(function(){   
+	//look for the element with id=loadingDots
+	//if not found clear the interval
+	    console.debug(isLoading + " " + showDots);
+	if ($("#loadingDots").length>0) {
+	    var dots = '...',i=1;
+    if ($("#loadingDots").html().length==0 || ($("#loadingDots").html().length == dots.length)){
+		$("#loadingDots").html('');
+		var i = 1;
+	    } else {
+		i++;
+	    }        
+	    $("#loadingDots").html($("#loadingDots").html()+".");
+	    } else {
+	       //clear the interval, if element not found
+	       clearInterval(showDots);
+	    }         
+	},200); 
+    }
+    if(!isLoading && !isDownloading) {
+	clearInterval(showDots);
+	showDots = null;
+    }
+};
+
+
+function getMasechetName() {
+    var currentDocumentSelector = document.getElementById("masechetSelectItem");
+    return currentDocumentSelector.options[currentDocumentSelector.selectedIndex].value; 
+}
+
+function setMasechetName(masechetName) {
+    var currentDocumentSelector = document.getElementById("masechetSelectItem");
+    var options = currentDocumentSelector.options;
+    for (i= 0; i<options.length; i++) {
+        if (options[i].value===masechetName) {
+            options[i].selected= true;
+            break;
+        }
+    }
+}
+
+function getCurrentPage() {
+    var currentPageSelector = document.getElementById("amudSelectorItem");
+    return currentPageSelector.options[currentPageSelector.selectedIndex].value;
+}
+
+function setCurrentPage(pageName) {
+    var currentPageSelector = document.getElementById("amudSelectorItem");
+    var options = currentPageSelector.options;
+    for (i= 0; i<options.length; i++) {
+        if (options[i].value===pageName) {
+            options[i].selected= true;
+            break;
+        }
+    }
+}
+
+//keepWindowLocation for export so that it won't stop
+function getNextPage(keepWindowLocation) {
+	var currentPageSelector = document.getElementById("amudSelectorItem");
+	if(currentPageSelector.selectedIndex < currentPageSelector.length-1) {
+	   if(keepWindowLocation) {
+        currentPageSelector.selectedIndex = currentPageSelector.selectedIndex +1;
+        return relaunch();
+	   } else
+        window.location.search = '?masechet='+ getMasechetName() + "&daf=" + currentPageSelector.options[currentPageSelector.selectedIndex+1].value;
+    }
+    return;
+}
+
+function getPreviousPage() {
+	var currentPageSelector = document.getElementById("amudSelectorItem");
+	if(currentPageSelector.selectedIndex > 0) {
+		//currentPageSelector.selectedIndex = currentPageSelector.selectedIndex -1;
+        window.location.search = '?masechet='+ getMasechetName() + "&daf=" + currentPageSelector.options[currentPageSelector.selectedIndex-1].value;
+	}
+	//return relaunch();
+}
+
+function loadingForDownloadStyle(forceLoading, masechetName, pageNumber,message) {
+    var el1 = document.getElementById("bottomNextPage");
+    var el2 = document.getElementById("bottomPreviousPage");
+    var elLoading = document.getElementById("loadingDiv");
+    var elLoadingText = document.getElementById("loadingText");
+    var titleDiv = document.getElementById("titlePageDiv");
+    var lastPage = (currentAmudTotalNumber/2)+1;
+    if(lastPage !== lastPage.toFixed()) {
+	lastPage = new Number(lastPage.toFixed());
+	lastPage = lastPage + "a";
+    } else {
+	lastPage = lastPage + "b";
+    }
+    if(forceLoading) {
+	showLoadingDots();
+        el1.style.display = 'none';
+        el2.style.display = 'none';
+        titleDiv.style.display = 'block';
+	if(message == undefined) {
+	    elLoadingText.innerHTML= "downloading " + masechetName + " daf " + pageNumber + " / " + lastPage;
+	} else {
+	    elLoadingText.innerHTML= message;
+	}
+	elLoading.style.display = 'block';
+
+    } else {
+        titleDiv.style.display = 'none';
+        el1.style.display = 'block';
+        el2.style.display = 'block';
+	elLoading.style.display = 'none';
+	console.debug("fin !");
+	clearInterval(showDots);
+	showDots = null;
+    }
+}
+
+function loadingStyle(forceLoading) {
+    if(isDownloading) return;
+    var el1 = document.getElementById("bottomNextPage");
+    var el2 = document.getElementById("bottomPreviousPage");
+    var elLoading = document.getElementById("loadingDiv");
+    var elLoadingText = document.getElementById("loadingText");
+    var titleDiv = document.getElementById("titlePageDiv");
+    var exportDiv = document.getElementById("exportDiv");
+
+    if(isLoading || forceLoading) {
+	showLoadingDots();
+        el1.style.display = 'none';
+        el2.style.display = 'none';
+	elLoadingText.innerHTML= "loading " + getMasechetName() + " daf " + getCurrentPage();
+	elLoading.style.display = 'block';
+        titleDiv.style.display = 'none';
+        exportDiv.style.display = 'none';
+    } else {
+	titleDiv.style.display = 'block';
+        el1.style.display = 'block';
+        el2.style.display = 'block';
+        exportDiv.style.display = 'block';
+	elLoading.style.display = 'none';
+	console.debug("fin !");
+	clearInterval(showDots);
+	showDots = null;
+    }
+}
+
+
+function relaunch() {
+    isLoading = true;
+    currentPromise = new $.Deferred();
+    console.debug(currentPromise);
+
+var currentDocument = getMasechetName();
+var currentPage = getCurrentPage();
+console.debug("masechet : " + currentDocument + " AND page : " + currentPage);
+document.getElementById("TitlePage").innerHTML = "<h1>"+currentDocument + " " + currentPage + "</h1>"
+document.getElementById("TitlePage").color = "red";
+
+var sefariaUrl = "http://www.sefaria.org/api/texts/" + currentDocument + "." + currentPage;
+return $.ajax({
+    //url: "./Megillah.2a.json",
+    url:sefariaUrl,
+    type:"GET",
+	crossDomain: true,
+	dataType:"jsonp",
+
+    success: function (data) {
+   		var container = document.getElementById("DynamicText");
+   		container.innerHTML = "";
+    	for (i = 0; i < data.he.length; i++) {
+    		var currentBlock = document.createElement("div");
+    		currentBlock.className = "currentBlock";
+    		//currentBlock.style.background //= "#FFFFFF";
+    		var hebrewText = document.createElement("div");
+    		hebrewText.className = "hebrewContent";
+    		hebrewText.innerHTML = "<blockquote>"+data.he[i].replace("'","׳")+"</blockquote>";
+			hebrewText.setAttribute("dir","rtl");
+
+			var regexp = /\([^\)]*\)/gi;
+			var tableau_correspondances = data.he[i].match(regexp);
+		    var referenceText = document.createElement("details");
+			if(tableau_correspondances != null && tableau_correspondances.length > 0) {
+				for(n = 0; n < tableau_correspondances.length; n++) {
+		    		var referenceSummaryText = document.createElement("summary");
+		    		referenceText.appendChild(referenceSummaryText);
+		    		referenceSummaryText.innerHTML = "source";
+		    		referenceText.style.color = "#4d658c";
+		    		referenceText.className = "rectForReference";
+
+		    		var allReferencesBlock = data.commentary.filter(function(el) { 
+						var documentName = el.anchorRef.substr(0, el.anchorRef.indexOf(' '));
+						var strRefCurrent = documentName + " " + currentPage + ":" + new Number(i+1);
+						var referenceType = tableau_correspondances[n].substring(1,tableau_correspondances[n].length-1);
+						return el.anchorRef == strRefCurrent && referenceType.startsWith(el.heTitle);
+					});
+					if(allReferencesBlock != undefined && allReferencesBlock.length > 0) {
+			    		for(j = 0; j < allReferencesBlock.length; j++) {
+			    			var currentHebrewReferencesText = document.createElement("div");
+			    			var hebrewReferenceText = allReferencesBlock[j].he;
+			    			currentHebrewReferencesText.innerHTML = "<u>" +allReferencesBlock[j].sourceHeRef + "</u> : " + hebrewReferenceText;
+							currentHebrewReferencesText.setAttribute("dir","rtl");
+							currentHebrewReferencesText.className = "hebrewContent";
+
+			    			var currentEnghlishReferencesText = document.createElement("p");
+			    			currentEnghlishReferencesText.innerHTML = allReferencesBlock[j].text;
+
+			    			referenceText.appendChild(currentHebrewReferencesText);
+			    			referenceText.appendChild(currentEnghlishReferencesText);
+
+			    			//underline References//
+							var referenceInText = tableau_correspondances[n];
+                            if(hebrewReferenceText != undefined && hebrewReferenceText != null && typeof hebrewReferenceText === 'string') {
+			    			  hebrewText.innerHTML = hebrewText.innerHTML.replace(referenceInText, "<u><a class='tags' glose='" +hebrewReferenceText.replace("'","`") +"'>" + referenceInText + "</a></u>");
+                            }
+		    			}
+		    		} else {
+	    			referenceText = document.createElement("div");
+		    	}
+	    		}
+			} else {
+    			referenceText = document.createElement("div");
+	    	}
+
+
+    		var englishText = document.createElement("p");
+    		englishText.innerHTML = data.text[i];
+
+
+    		var rashiText = document.createElement("details");
+    		var rashiSummaryText = document.createElement("summary");
+    		rashiText.appendChild(rashiSummaryText);
+    		rashiSummaryText.innerHTML = "RASHI";
+    		rashiText.style.color = "#4d658c";
+    		rashiText.className = "rectForRashi"
+
+			var allRashiBlock = data.commentary.filter(function(el) { 
+				var documentName = el.anchorRef.substr(0, el.anchorRef.indexOf(' '));
+				var strRashiCurrent = "Rashi on " + documentName + " " + currentPage + ":" + new Number(i+1) + ":";
+				return el.commentator == "Rashi" && el.sourceRef.startsWith(strRashiCurrent);
+			});
+
+    		if(allRashiBlock != undefined && allRashiBlock.length > 0) {
+	    		for(j = 0; j < allRashiBlock.length; j++) {
+	    			var currentHebrewRashiText = document.createElement("div");
+	    			currentHebrewRashiText.innerHTML = "<i>"+allRashiBlock[j].he+"</i>";
+					currentHebrewRashiText.setAttribute("dir","rtl");
+					currentHebrewRashiText.className = "hebrewContent";
+
+	    			var currentEnghlishRashiText = document.createElement("p");
+	    			currentEnghlishRashiText.innerHTML = allRashiBlock[j].text;
+
+	    			rashiText.appendChild(currentHebrewRashiText);
+	    			rashiText.appendChild(currentEnghlishRashiText);
+
+	    			//document.createTextNode(allRashiBlock[j].he)
+	    			//underline rashi//
+					var dibourHamatril = allRashiBlock[j].he.substring(0,allRashiBlock[j].he.indexOf("-")-1);
+					if(dibourHamatril === "") {
+						dibourHamatril = allRashiBlock[j].he.substring(0,allRashiBlock[j].he.indexOf("–")-1);
+					}
+                    if(dibourHamatril === "") {
+                        dibourHamatril = allRashiBlock[j].he.substring(0,allRashiBlock[j].he.indexOf(":")-1);
+                    }
+                    currentHebrewRashiText.innerHTML = currentHebrewRashiText.innerHTML.replace(dibourHamatril, "<u><strong>" + dibourHamatril + "</strong></u>");
+
+                   //var regexp = /\([^\(]*\)/gi;
+                   //var tableau_correspondances = data.he[i].match(regexp);
+                    var regexp = "";
+                    var dibourHamatrilForRegex = dibourHamatril.replace(" וכו'","").replace(" כו'","").replace("[","").replace("]","").replace("/","").replace("\\","").replace("(","").replace(")","");
+                    for (zz = 0; zz < dibourHamatrilForRegex.length-1; zz++) {
+                            regexp = regexp + dibourHamatrilForRegex[zz].replace("'","׳") + "(\ )*(<[^>]*>)*(\ )*";
+                    }
+                    if(dibourHamatrilForRegex[zz] != " ")
+                    regexp = regexp + dibourHamatrilForRegex[zz];
+                    //console.debug(regexp);
+                    //console.debug(dibourHamatrilForRegex[zz]);
+                    var dibourHamtrilWithTags = hebrewText.innerHTML.match(regexp);
+                    if(dibourHamtrilWithTags != null && dibourHamtrilWithTags.length > 0) {
+                        hebrewText.innerHTML = hebrewText.innerHTML.replace(dibourHamtrilWithTags[0], "<u><a class='tags' glose='" +allRashiBlock[j].he.replace("'","`").replace("'","`") +"'>" + dibourHamtrilWithTags[0] + "</a></u>");
+                    }
+	    		}
+	    	} else {
+    			rashiText = document.createElement("div");
+	    	}
+
+    		currentBlock.appendChild(hebrewText);
+    		if(referenceText != undefined && referenceText != null) {
+    			currentBlock.appendChild(referenceText);
+    		}
+    		currentBlock.appendChild(englishText);
+    		currentBlock.appendChild(rashiText);
+    		container.appendChild(currentBlock);
+
+		}
+        isLoading = false;
+        loadingStyle(false);
+        console.debug("fini !");
+        currentPromise.resolve();
+    }
+
+});
+}
+    var currentAmudTotalNumber = 0;
+    var shass = [];
+    shass.push({
+        "Name": "Brachot",
+        "Amudim": 125
+    });
+    shass.push({
+        "Name": "Shabbat",
+        "Amudim": 312
+    });
+    shass.push({
+        "Name": "Eruvin",
+        "Amudim": 207
+    });
+    shass.push({
+        "Name": "Pesachim",
+        "Amudim": 240
+    });
+    shass.push({
+        "Name": "Shekalim",
+        "Amudim": 42
+    });
+    shass.push({
+        "Name": "Yoma",
+        "Amudim": 173
+    });
+    shass.push({
+        "Name": "Sukka",
+        "Amudim": 110
+    });
+    shass.push({
+        "Name": "Beitzah",
+        "Amudim": 78
+    });
+    shass.push({
+        "Name": "Rosh_Hashanah",
+        "Amudim": 67
+    });
+    shass.push({
+        "Name": "Taanit",
+        "Amudim": 59
+    });
+    shass.push({
+        "Name": "Megilah",
+        "Amudim": 61
+    });
+    shass.push({
+        "Name": "Moed_Katan",
+        "Amudim": 55
+    });
+    shass.push({
+        "Name": "Chagigah",
+        "Amudim" :51
+    });
+    shass.push({
+        "Name": "Yevamot",
+        "Amudim": 242
+    });
+    shass.push({
+        "Name": "Ketuvot",
+        "Amudim": 222
+    });
+    shass.push({
+        "Name": "Nedarim",
+        "Amudim": 180
+    });
+    shass.push({
+        "Name": "Nazir",
+        "Amudim": 130
+    });
+    shass.push({
+        "Name": "Sotah",
+        "Amudim": 96
+    });
+    shass.push({
+        "Name": "Gitin",
+        "Amudim": 178
+    });
+    shass.push({
+        "Name": "Kiddushin",
+        "Amudim": 162
+    });
+    shass.push({
+        "Name": "Bava_Kama",
+        "Amudim": 236
+    });
+    shass.push({
+        "Name": "Bava_Metzia",
+        "Amudim": 235
+    });
+    shass.push({
+        "Name": "Bava_Batra",
+        "Amudim": 350
+    });
+    shass.push({
+        "Name": "Sanhedrin",
+        "Amudim": 224
+    });
+    shass.push({
+        "Name": "Makot",
+        "Amudim": 46
+    });
+    shass.push({
+        "Name": "Shevuot",
+        "Amudim": 96
+    });
+    shass.push({
+        "Name": "Avodah_Zarah",
+        "Amudim": 150
+    });
+    shass.push({
+        "Name": "Horayot",
+        "Amudim": 25
+    });
+    shass.push({
+        "Name": "Zevachim",
+        "Amudim": 238
+    });
+    shass.push({
+        "Name": "Menachot",
+        "Amudim": 217
+    });
+    shass.push({
+        "Name": "Chulin",
+        "Amudim": 281
+    });
+    shass.push({
+        "Name": "Bechorot",
+        "Amudim": 119
+    });
+    shass.push({
+        "Name": "Erchin",
+        "Amudim": 65
+    });
+    shass.push({
+        "Name": "Temurah",
+        "Amudim": 65
+    });
+    shass.push({
+        "Name": "Keritot",
+        "Amudim": 54
+    });
+    shass.push({
+        "Name": "Meilah",
+        "Amudim": 72
+    });
+    shass.push({
+        "Name": "Niddah",
+        "Amudim": 143
+    });
+
+    function printMasechetSelection() {
+        var returnedString = '<select id=masechetSelectItem onchange="getAmudSelectorTest(this.value)">';
+        shass.forEach(function (masechet) {
+            returnedString += '<option value=' + masechet.Name + '>' + masechet.Name + '</option>';
+        });
+        returnedString += '</select>';
+        var masechtaselection = document.getElementById('masechtaselection');
+        masechtaselection.innerHTML = returnedString;
+    }
+
+    function getNumberOfAmudim (masechet) {
+         return shass.find(function(masechta){
+            if(masechta.Name==masechet) {
+                return masechta.Amudim;
+            }
+        })
+    }
+
+    function getAmudSelectorTest(masechet) {
+       window.location.search = '?masechet='+ masechet + "&daf=2a";
+    }
+
+    function getAmudSelector(masechet, amudToSelect) {
+        var amudSelector = document.getElementById("amudSelector")
+        if (amudSelector != null) document.removeChild(amudSelector);
+        amudSelector = document.createElement('select');
+        amudSelector.id = "amudSelectorItem";
+        amudSelector.onchange = function() { 
+            window.location.search = '?masechet='+ getMasechetName() + "&daf=" + getCurrentPage();
+        };
+        var numberOfAmudim = getNumberOfAmudim(masechet).Amudim;
+        currentAmudTotalNumber = numberOfAmudim;
+        if (numberOfAmudim % 2 == 0) {
+            for (i = 2; i <= numberOfAmudim / 2 + 1; i++) {
+                var optiona = document.createElement('option');
+                optiona.value = i + 'a';
+                optiona.text = i + 'a';
+                amudSelector.appendChild(optiona);
+                var optionb = document.createElement('option');
+                optionb.value = i + 'b';
+                optionb.text = i + 'b';
+                amudSelector.appendChild(optionb);
+            }
+        } else {
+            for (i = 2; i <= (numberOfAmudim - 1) / 2 + 1; i++) {
+                var optiona = document.createElement('option');
+                optiona.value = i + 'a';
+                optiona.text = i + 'a';
+                amudSelector.appendChild(optiona);
+
+                var optionb = document.createElement('option');
+                optionb.value = i + 'b';
+                optionb.text = i + 'b';
+                amudSelector.appendChild(optionb);
+                }
+                var optionb = document.createElement('option');
+                optionb.value = (numberOfAmudim - 1) / 2 + 2 + 'a';
+                optionb.text = (numberOfAmudim - 1) / 2 + 2 + 'a';
+                amudSelector.appendChild(optionb);
+                
+            }
+            var amudSelection = document.getElementById('amudselection');
+            amudSelection.appendChild(amudSelector);
+            if(amudToSelect === undefined || amudToSelect === null ) {
+                amudSelection.innerHTML='';
+            } else {
+                setCurrentPage(amudToSelect);
+            }
+			relaunch();
+
+        }
+        
+    
+    printMasechetSelection();
+    var masechet = getParameterByName('masechet');
+    var daf = getParameterByName('daf');
+    var download = getParameterByName('download');
+    if(masechet == undefined || masechet == null) masechet = 'Brachot';
+    if(daf == undefined || daf == null) daf = "2a";
+    setMasechetName(masechet);
+    getAmudSelector(masechet, daf);
+
+    if(download) {
+	downloadMasechet();
+    }
+loadingStyle(false);
+
+							    	
+
+
+</script>
+</body>
+</html>
